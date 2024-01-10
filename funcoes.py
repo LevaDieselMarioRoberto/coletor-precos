@@ -5,7 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
-from time import sleep
+from time import sleep, time
 
 
 def inicializa_navegador(maximizado=False):
@@ -167,3 +167,140 @@ def seleciona_opcao_menu_suspenso(navegador, xpath_select_box, opcao, tempo_espe
     select.select_by_visible_text(opcao)
 
     sleep(1)
+
+
+def imprime_precos(
+    precos_ipr1, precos_ipr2, tempo_ex_ipr,
+    precos_vbr, tempo_ex_vbr,
+    precos_rzn, tempo_ex_rzn,
+    precos_gasstation, precos_distrito, precos_itirapua, precos_ppp, precos_pitstop, tempo_ex_ipr_postos,
+    precos_vbr_janjao, tempo_ex_vbr_janjao,
+    inicio
+):
+    """
+    Imprime os preços coletados.
+
+    Args:
+        precos_ipr1 (dict): Dicionário com os preços coletados do posto Ipiranga 1.
+        precos_ipr2 (dict): Dicionário com os preços coletados do posto Ipiranga 2.
+        tempo_ex_ipr (float): Tempo de execução da coleta de preços do posto Ipiranga.
+        precos_vbr (dict): Dicionário com os preços coletados do posto Vibra.
+        tempo_ex_vbr (float): Tempo de execução da coleta de preços do posto Vibra.
+        precos_rzn (dict): Dicionário com os preços coletados do posto Raizen.
+        tempo_ex_rzn (float): Tempo de execução da coleta de preços do posto Raizen.
+        precos_gasstation (dict): Dicionário com os preços coletados do posto Ipiranga Gas Station.
+        precos_distrito (dict): Dicionário com os preços coletados do posto Ipiranga Distrito.
+        precos_itirapua (dict): Dicionário com os preços coletados do posto Ipiranga Itirapuã.
+        precos_ppp (dict): Dicionário com os preços coletados do posto Ipiranga PPP.
+        precos_pitstop (dict): Dicionário com os preços coletados do posto Ipiranga Pit Stop.
+        tempo_ex_ipr_postos (float): Tempo de execução da coleta de preços dos postos Ipiranga.
+        precos_vbr_janjao (dict): Dicionário com os preços coletados do posto Vibra Janjão.
+        tempo_ex_vbr_janjao (float): Tempo de execução da coleta de preços do posto Vibra Janjão.
+        inicio (float): Tempo de início da execução do script.
+    """
+    print("\n----------------------------------")
+    print("                CIF           FOB\n")
+
+    print("TRR:\n")
+
+    print(f"Ipiranga [1]:              ({tempo_ex_ipr}s)")
+    print(f"s10            {precos_ipr1['cif_s10']}       {precos_ipr1['fob_s10']}")
+    print(f"s500           {precos_ipr1['cif_s500']}       {precos_ipr1['fob_s500']}")
+    print(f"Ipiranga [2]:")
+    print(f"s10            {precos_ipr2['cif_s10']}       {precos_ipr2['fob_s10']}")
+    print(f"s500           {precos_ipr2['cif_s500']}       {precos_ipr2['fob_s500']}\n")
+
+    print(f"Vibra:                     ({tempo_ex_vbr}s)")
+    print(f"s10            {precos_vbr['cif_s10']}       {precos_vbr['fob_s10']}")
+    print(f"s500           {precos_vbr['cif_s500']}       {precos_vbr['fob_s500']}\n")
+
+    print(f"Raizen:                    ({tempo_ex_rzn}s)")
+    print(f"s10            {precos_rzn['cif_s10']}       {precos_rzn['fob_s10']}")
+    print(f"s500           {precos_rzn['cif_s500']}       {precos_rzn['fob_s500']}\n")
+
+    print("\nPostos:\n")
+
+    print(f"Ipiranga Gás Station:      ({tempo_ex_ipr_postos}s)")
+    print(f"Etanol         {precos_gasstation['cif_etanol']}       {precos_gasstation['fob_etanol']}")
+    print(f"Gasolina       {precos_gasstation['cif_gasolina']}       {precos_gasstation['fob_gasolina']}")
+    print(f"Gasolina Ad    {precos_gasstation['cif_gasolina_adt']}       {precos_gasstation['fob_gasolina_adt']}")
+    print(f"s10            {precos_gasstation['cif_s10']}       {precos_gasstation['fob_s10']}\n")
+
+    print("Ipiranga Distrito:")
+    print(f"Etanol         {precos_distrito['cif_etanol']}       {precos_distrito['fob_etanol']}")
+    print(f"Gasolina       {precos_distrito['cif_gasolina']}       {precos_distrito['fob_gasolina']}")
+    print(f"s10            {precos_distrito['cif_s10']}       {precos_distrito['fob_s10']}")
+    print(f"s500           {precos_distrito['cif_s500']}       {precos_distrito['fob_s500']}\n")
+
+    print("Ipiranga Itirapuã:")
+    print(f"Etanol         {precos_itirapua['cif_etanol']}       {precos_itirapua['fob_etanol']}")
+    print(f"Gasolina       {precos_itirapua['cif_gasolina']}       {precos_itirapua['fob_gasolina']}")
+    print(f"s10            {precos_itirapua['cif_s10']}       {precos_itirapua['fob_s10']}")
+    print(f"s500           {precos_itirapua['cif_s500']}       {precos_itirapua['fob_s500']}\n")
+
+    print("Ipiranga PPP:")
+    print(f"Etanol         {precos_ppp['cif_etanol']}       {precos_ppp['fob_etanol']}")
+    print(f"Gasolina       {precos_ppp['cif_gasolina']}       {precos_ppp['fob_gasolina']}")
+    print(f"s10            {precos_ppp['cif_s10']}       {precos_ppp['fob_s10']}\n")
+
+    print("Ipiranga Pit Stop:")
+    print(f"Etanol         {precos_pitstop['cif_etanol']}       {precos_pitstop['fob_etanol']}")
+    print(f"Gasolina       {precos_pitstop['cif_gasolina']}       {precos_pitstop['fob_gasolina']}")
+    print(f"Gasolina Ad    {precos_pitstop['cif_gasolina_adt']}       {precos_pitstop['fob_gasolina_adt']}")
+    print(f"s10            {precos_pitstop['cif_s10']}       {precos_pitstop['fob_s10']}")
+    print(f"s500           {precos_pitstop['cif_s500']}       {precos_pitstop['fob_s500']}\n")
+
+    print(f"Vibra Janjão:              ({tempo_ex_vbr_janjao}s)")
+    print(f"Etanol         {precos_vbr_janjao['cif_etanol']}       {precos_vbr_janjao['fob_etanol']}")
+    print(f"Gasolina       {precos_vbr_janjao['cif_gasolina']}       {precos_vbr_janjao['fob_gasolina']}")
+    print(f"s10            {precos_vbr_janjao['cif_s10']}       {precos_vbr_janjao['fob_s10']}")
+    print(f"s500           {precos_vbr_janjao['cif_s500']}       {precos_vbr_janjao['fob_s500']}\n")
+
+    print(f"Tempo total: {round(time() - inicio, 2)} segundos")
+    print("----------------------------------")
+
+
+def cria_dicionario_para_df(
+    precos_ipr1, precos_ipr2, precos_vbr, precos_rzn,
+    precos_gasstation, precos_distrito, precos_itirapua, precos_ppp, precos_pitstop, tempo_ex_ipr_postos,
+    precos_vbr_janjao,    
+):
+    """
+    Cria um dicionário com os preços coletados para ser usado na criação de um DataFrame.
+
+    Args:
+        precos_ipr1 (dict): Dicionário com os preços coletados do posto Ipiranga 1.
+        precos_ipr2 (dict): Dicionário com os preços coletados do posto Ipiranga 2.
+        precos_vbr (dict): Dicionário com os preços coletados do posto Vibra.
+        precos_rzn (dict): Dicionário com os preços coletados do posto Raizen.
+        precos_gasstation (dict): Dicionário com os preços coletados do posto Ipiranga Gas Station.
+        precos_distrito (dict): Dicionário com os preços coletados do posto Ipiranga Distrito.
+        precos_itirapua (dict): Dicionário com os preços coletados do posto Ipiranga Itirapuã.
+        precos_ppp (dict): Dicionário com os preços coletados do posto Ipiranga PPP.
+        precos_pitstop (dict): Dicionário com os preços coletados do posto Ipiranga Pit Stop.
+        tempo_ex_ipr_postos (float): Tempo de execução da coleta de preços dos postos Ipiranga.
+        precos_vbr_janjao (dict): Dicionário com os preços coletados do posto Vibra Janjão.
+    """
+    return {
+        "TIPO": ["Etanol", "Gas Ad", "Gas C", "S10", "S500"],
+        "CIF2": [precos_pitstop['cif_etanol'], precos_pitstop['cif_gasolina_adt'], precos_pitstop['cif_gasolina'], precos_pitstop['cif_s10'], precos_pitstop['cif_s500']],
+        "FOB2": [precos_pitstop['fob_etanol'], precos_pitstop['fob_gasolina_adt'], precos_pitstop['fob_gasolina'], precos_pitstop['fob_s10'], precos_pitstop['fob_s500']],
+        "CIF3": [precos_distrito['cif_etanol'], '', precos_distrito['cif_gasolina'], precos_distrito['cif_s10'], precos_distrito['cif_s500']],
+        "FOB3": [precos_distrito['fob_etanol'], '', precos_distrito['fob_gasolina'], precos_distrito['fob_s10'], precos_distrito['fob_s500']],
+        "CIF4": [precos_gasstation['cif_etanol'], precos_gasstation['cif_gasolina_adt'], precos_gasstation['cif_gasolina'], precos_gasstation['cif_s10'], ''],
+        "FOB4": [precos_gasstation['fob_etanol'], precos_gasstation['fob_gasolina_adt'], precos_gasstation['fob_gasolina'], precos_gasstation['fob_s10'], ''],
+        "CIF5": [precos_itirapua['cif_etanol'], '', precos_itirapua['cif_gasolina'], precos_itirapua['cif_s10'], precos_itirapua['cif_s500']],
+        "FOB5": [precos_itirapua['fob_etanol'], '', precos_itirapua['fob_gasolina'], precos_itirapua['fob_s10'], precos_itirapua['fob_s500']],
+        "CIF6": [precos_ppp['cif_etanol'], '', precos_ppp['cif_gasolina'], precos_ppp['cif_s10'], ''],
+        "FOB6": [precos_ppp['fob_etanol'], '', precos_ppp['fob_gasolina'], precos_ppp['fob_s10'], ''],
+        "CIF7": [precos_vbr_janjao['cif_etanol'], '', precos_vbr_janjao['cif_gasolina'], precos_vbr_janjao['cif_s10'], precos_vbr_janjao['cif_s500']],
+        "FOB7": [precos_vbr_janjao['fob_etanol'], '', precos_vbr_janjao['fob_gasolina'], precos_vbr_janjao['fob_s10'], precos_vbr_janjao['fob_s500']],
+        "CIF8": ['', '', '', precos_ipr1['cif_s10'], precos_ipr1['cif_s500']],
+        "FOB8": ['', '', '', precos_ipr1['fob_s10'], precos_ipr1['fob_s500']],
+        "CIF9": ['', '', '', precos_ipr2['cif_s10'], precos_ipr2['cif_s500']],
+        "FOB9": ['', '', '', precos_ipr2['fob_s10'], precos_ipr2['fob_s500']],
+        "CIF10": ['', '', '', precos_vbr['cif_s10'], precos_vbr['cif_s500']],
+        "FOB10": ['', '', '', precos_vbr['fob_s10'], precos_vbr['fob_s500']],
+        "CIF11": ['', '', '', precos_rzn['cif_s10'], precos_rzn['cif_s500']],
+        "FOB11": ['', '', '', precos_rzn['fob_s10'], precos_rzn['fob_s500']]
+    }

@@ -1,10 +1,17 @@
-import threading
 import ipiranga
 import vibra
 import raizen
 import ipiranga_postos
 import vibra_janjao
+from funcoes import imprime_precos, cria_dicionario_para_df
+
+import threading
+import pandas as pd
+# import openpyxl
+from openpyxl import load_workbook
+from openpyxl.styles import Alignment, Font, PatternFill, Border, Side
 from time import time
+from datetime import datetime
 
 global precos_ipr1, precos_ipr2, precos_vbr, precos_rzn, tempo_ex_ipr, tempo_ex_vbr, tempo_ex_rzn
 global precos_gasstation, precos_distrito, precos_itirapua, precos_ppp, precos_pitstop, tempo_ex_ipr_postos
@@ -52,63 +59,130 @@ thread_rzn.join()
 thread_ipr_postos.join()
 thread_vbr_janjao.join()
 
-print("\n----------------------------------")
-print("                CIF           FOB\n")
+imprime_precos(
+    precos_ipr1, precos_ipr2, tempo_ex_ipr,
+    precos_vbr, tempo_ex_vbr,
+    precos_rzn, tempo_ex_rzn,
+    precos_gasstation, precos_distrito, precos_itirapua, precos_ppp, precos_pitstop, tempo_ex_ipr_postos,
+    precos_vbr_janjao, tempo_ex_vbr_janjao,
+    inicio
+)
 
-print("TRR:\n")
+# Criando o DataFrame com os resultados
+dados = cria_dicionario_para_df(
+    precos_ipr1, precos_ipr2, precos_vbr, precos_rzn,
+    precos_gasstation, precos_distrito, precos_itirapua, precos_ppp, precos_pitstop, tempo_ex_ipr_postos,
+    precos_vbr_janjao,
+)
 
-print(f"Ipiranga [1]:              ({tempo_ex_ipr}s)")
-print(f"s10            {precos_ipr1['cif_s10']}       {precos_ipr1['fob_s10']}")
-print(f"s500           {precos_ipr1['cif_s500']}       {precos_ipr1['fob_s500']}")
-print(f"Ipiranga [2]:")
-print(f"s10            {precos_ipr2['cif_s10']}       {precos_ipr2['fob_s10']}")
-print(f"s500           {precos_ipr2['cif_s500']}       {precos_ipr2['fob_s500']}\n")
+df = pd.DataFrame(dados)
 
-print(f"Vibra:                     ({tempo_ex_vbr}s)")
-print(f"s10            {precos_vbr['cif_s10']}       {precos_vbr['fob_s10']}")
-print(f"s500           {precos_vbr['cif_s500']}       {precos_vbr['fob_s500']}\n")
+# Criando um novo arquivo Excel com o nome da aba sendo a data atual
+data = datetime.now().strftime('%d-%m')
+nome_arquivo = f"C:/Users/titrr/OneDrive - MARIO ROBERTO TRANSP REVENDEDORA D OLEO DIESEL/Leva Diesel/Logística/resultados_precos.xlsx"
 
-print(f"Raizen:                    ({tempo_ex_rzn}s)")
-print(f"s10            {precos_rzn['cif_s10']}       {precos_rzn['fob_s10']}")
-print(f"s500           {precos_rzn['cif_s500']}       {precos_rzn['fob_s500']}\n")
+# Carregando o arquivo Excel existente (ou criando um novo se não existir)
+try:
+    writer = pd.ExcelWriter(nome_arquivo, engine='openpyxl', datetime_format='dd/mm/yyyy HH:MM:SS', date_format='dd/mm/yyyy', mode='a', if_sheet_exists='replace')
+except FileNotFoundError:
+    writer = pd.ExcelWriter(nome_arquivo, engine='openpyxl', datetime_format='dd/mm/yyyy HH:MM:SS', date_format='dd/mm/yyyy', mode='w')
 
-print("\nPostos:\n")
+df.to_excel(writer, sheet_name=data, index=False)
+writer.close()
 
-print(f"Ipiranga Gás Station:      ({tempo_ex_ipr_postos}s)")
-print(f"Etanol         {precos_gasstation['cif_etanol']}       {precos_gasstation['fob_etanol']}")
-print(f"Gasolina       {precos_gasstation['cif_gasolina']}       {precos_gasstation['fob_gasolina']}")
-print(f"Gasolina Ad    {precos_gasstation['cif_gasolina_adt']}       {precos_gasstation['fob_gasolina_adt']}")
-print(f"s10            {precos_gasstation['cif_s10']}       {precos_gasstation['fob_s10']}\n")
+print(f"Resultados salvos em: {nome_arquivo}")
 
-print("Ipiranga Distrito:")
-print(f"Etanol         {precos_distrito['cif_etanol']}       {precos_distrito['fob_etanol']}")
-print(f"Gasolina       {precos_distrito['cif_gasolina']}       {precos_distrito['fob_gasolina']}")
-print(f"s10            {precos_distrito['cif_s10']}       {precos_distrito['fob_s10']}")
-print(f"s500           {precos_distrito['cif_s500']}       {precos_distrito['fob_s500']}\n")
+# Abrindo o arquivo Excel com openpyxl
+workbook = load_workbook(nome_arquivo)
+sheet = workbook[data]
 
-print("Ipiranga Itirapuã:")
-print(f"Etanol         {precos_itirapua['cif_etanol']}       {precos_itirapua['fob_etanol']}")
-print(f"Gasolina       {precos_itirapua['cif_gasolina']}       {precos_itirapua['fob_gasolina']}")
-print(f"s10            {precos_itirapua['cif_s10']}       {precos_itirapua['fob_s10']}")
-print(f"s500           {precos_itirapua['cif_s500']}       {precos_itirapua['fob_s500']}\n")
+# Inserindo uma linha acima de tudo
+sheet.insert_rows(1)
 
-print("Ipiranga PPP:")
-print(f"Etanol         {precos_ppp['cif_etanol']}       {precos_ppp['fob_etanol']}")
-print(f"Gasolina       {precos_ppp['cif_gasolina']}       {precos_ppp['fob_gasolina']}")
-print(f"s10            {precos_ppp['cif_s10']}       {precos_ppp['fob_s10']}\n")
+# Mesclando células
+sheet.merge_cells('B1:C1')
+sheet.merge_cells('D1:E1')
+sheet.merge_cells('F1:G1')
+sheet.merge_cells('H1:I1')
+sheet.merge_cells('J1:K1')
+sheet.merge_cells('L1:M1')
+sheet.merge_cells('N1:O1')
+sheet.merge_cells('P1:Q1')
+sheet.merge_cells('R1:S1')
+sheet.merge_cells('T1:U1')
 
-print("Ipiranga Pit Stop:")
-print(f"Etanol         {precos_pitstop['cif_etanol']}       {precos_pitstop['fob_etanol']}")
-print(f"Gasolina       {precos_pitstop['cif_gasolina']}       {precos_pitstop['fob_gasolina']}")
-print(f"Gasolina Ad    {precos_pitstop['cif_gasolina_adt']}       {precos_pitstop['fob_gasolina_adt']}")
-print(f"s10            {precos_pitstop['cif_s10']}       {precos_pitstop['fob_s10']}")
-print(f"s500           {precos_pitstop['cif_s500']}       {precos_pitstop['fob_s500']}\n")
+# Definindo o texto
+sheet['B1'] = 'Pitstop'
+sheet['D1'] = 'Distrito'
+sheet['F1'] = 'Gas Station'
+sheet['H1'] = 'Itirapuã'
+sheet['J1'] = 'PPP'
+sheet['L1'] = 'Janjão'
+sheet['N1'] = 'TRR Ipiranga1'
+sheet['P1'] = 'TRR Ipiranga2'
+sheet['R1'] = 'TRR Vibra'
+sheet['T1'] = 'TRR Raízen'
 
-print(f"Vibra Janjão:              ({tempo_ex_vbr_janjao}s)")
-print(f"Etanol         {precos_vbr_janjao['cif_etanol']}       {precos_vbr_janjao['fob_etanol']}")
-print(f"Gasolina       {precos_vbr_janjao['cif_gasolina']}       {precos_vbr_janjao['fob_gasolina']}")
-print(f"s10            {precos_vbr_janjao['cif_s10']}       {precos_vbr_janjao['fob_s10']}")
-print(f"s500           {precos_vbr_janjao['cif_s500']}       {precos_vbr_janjao['fob_s500']}\n")
+# Estilo para tornar o texto negrito
+font_bold = Font(bold=True)
+sheet['B1'].font = font_bold
+sheet['D1'].font = font_bold
+sheet['F1'].font = font_bold
+sheet['H1'].font = font_bold
+sheet['J1'].font = font_bold
+sheet['L1'].font = font_bold
+sheet['N1'].font = font_bold
+sheet['P1'].font = font_bold
+sheet['R1'].font = font_bold
+sheet['T1'].font = font_bold
 
-print(f"Tempo total: {round(time() - inicio, 2)} segundos")
-print("----------------------------------")
+# Estilo para pintar o fundo da célula B1
+amarelo = PatternFill(start_color="FFFFCC", end_color="FFFFCC", fill_type="solid")
+verde = PatternFill(start_color="D8E4BC", end_color="D8E4BC", fill_type="solid")
+roxo = PatternFill(start_color="E4DFEC", end_color="E4DFEC", fill_type="solid")
+sheet['B1'].fill = amarelo
+sheet['D1'].fill = amarelo
+sheet['F1'].fill = amarelo
+sheet['H1'].fill = amarelo
+sheet['J1'].fill = amarelo
+sheet['L1'].fill = verde
+sheet['N1'].fill = amarelo
+sheet['P1'].fill = amarelo
+sheet['R1'].fill = verde
+sheet['T1'].fill = roxo
+
+# Centralizando o texto em B1
+centralizado = Alignment(horizontal='center', vertical='center')
+sheet['B1'].alignment = centralizado
+sheet['D1'].alignment = centralizado
+sheet['F1'].alignment = centralizado
+sheet['H1'].alignment = centralizado
+sheet['J1'].alignment = centralizado
+sheet['L1'].alignment = centralizado
+sheet['N1'].alignment = centralizado
+sheet['P1'].alignment = centralizado
+sheet['R1'].alignment = centralizado
+sheet['T1'].alignment = centralizado
+
+# Adicionando bordas à célula B1
+border = Border(
+    left=Side(border_style="thin", color="000000"),
+    right=Side(border_style="thin", color="000000"),
+    top=Side(border_style="thin", color="000000"),
+    bottom=Side(border_style="thin", color="000000"),
+)
+sheet['B1'].border = border
+sheet['D1'].border = border
+sheet['F1'].border = border
+sheet['H1'].border = border
+sheet['J1'].border = border
+sheet['L1'].border = border
+sheet['N1'].border = border
+sheet['P1'].border = border
+sheet['R1'].border = border
+sheet['T1'].border = border
+sheet['U1'].border = border
+
+# Salvando as alterações
+workbook.save(nome_arquivo)
+print("Excel tratado com sucesso!")
