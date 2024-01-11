@@ -29,6 +29,7 @@ def coleta_precos(maximizado=False):
         preenche_input(navegador, VAR['id_input_qtdlitros_s10'], 10000, xpath_ou_id='id')
         preenche_input(navegador, VAR['id_input_qtdlitros_s500'], 10000, xpath_ou_id='id')
         clica_botao(navegador, VAR['xpath_button_atualizar'], sleep_time=5)
+        clica_botao(navegador, VAR['xpath_button_atualizar'], sleep_time=5)
 
         # Seleção de prazo
         seleciona_prazo(navegador, VAR['id_select_prazo_s10'], VAR['prazo'])
@@ -44,6 +45,7 @@ def coleta_precos(maximizado=False):
         # Alteração de modo
         muda_modo(navegador, VAR['id_select_modo_s10'], VAR['modo'])
         muda_modo(navegador, VAR['id_select_modo_s500'], VAR['modo'])
+        clica_botao(navegador, VAR['xpath_button_atualizar'], sleep_time=5)
         clica_botao(navegador, VAR['xpath_button_atualizar'], sleep_time=5)
 
         # Coleta de preços CIF

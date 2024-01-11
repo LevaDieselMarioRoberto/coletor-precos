@@ -41,6 +41,7 @@ def coleta_precos(maximizado=False):
         muda_modo(navegador, VAR['id_select_modo_s10'], VAR['modo'])
         muda_modo(navegador, VAR['id_select_modo_s500'], VAR['modo'])
         clica_botao(navegador, VAR['xpath_button_atualizar'], sleep_time=5)
+        clica_botao(navegador, VAR['xpath_button_atualizar'], sleep_time=5)
 
         # Coleta de preços CIF
         precos_vbr['cif_etanol'] = coleta_valor(navegador, VAR['xpath_preco_etanol'])

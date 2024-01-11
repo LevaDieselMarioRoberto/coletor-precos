@@ -48,7 +48,7 @@ def clica_botao(navegador, xpath, tempo_espera=20, sleep_time=2):
         navegador (WebDriver): Instância do navegador Selenium.
         xpath (str): O caminho XPath do botão desejado.
         tempo_espera (int): Tempo máximo de espera para o botão (padrão é 20 segundos).
-        sleep_time (int): Tempo de espera adicional após a mudança do modo (padrão é 2 segundos).
+        sleep_time (int): Tempo de espera adicional antes do clique (padrão é 2 segundos).
     """
 
     sleep(sleep_time)
