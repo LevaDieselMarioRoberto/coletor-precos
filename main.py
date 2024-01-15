@@ -37,7 +37,7 @@ funcoes_e_argumentos = [    # Lista de tuplas, sendo a função e seus respectiv
 ]
 
 inicio = time()
-logger.log(f"\n### Iniciando coletas... ###")
+logger.log(f"   --- Iniciando coletas... ---")
 with ThreadPoolExecutor() as executor:  # Executa as funções simultaneamente
     executor.map(lambda x: x[0](*x[1]), funcoes_e_argumentos)
 tempo_total = round(time() - inicio, 2)

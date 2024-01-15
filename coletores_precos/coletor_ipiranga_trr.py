@@ -11,7 +11,7 @@ class ColetorIpirangaTRR(ColetorDePreco):
     def __init__(self):
         super().__init__()
 
-        load_dotenv()
+        load_dotenv('C:/Users/titrr/OneDrive - MARIO ROBERTO TRANSP REVENDEDORA D OLEO DIESEL/Leva Diesel/Informatica/projetos/coleta_precos/.env')
         self.VAR = {
             'link': os.getenv('LINK_IPR'),
             'link_pedidos': os.getenv('LINK_PEDIDOS_IPR'),
@@ -19,7 +19,7 @@ class ColetorIpirangaTRR(ColetorDePreco):
             'xpath_input_senha': os.getenv('XPATH_INPUT_SENHA_IPR'),
             'login': os.getenv('LOGIN_IPR'),
             'senha': os.getenv('SENHA_IPR'),
-            'xpath_button_entrar': str(os.getenv('XPATH_BUTTON_ENTRAR_IPR')),
+            'xpath_button_entrar': os.getenv('XPATH_BUTTON_ENTRAR_IPR'),
             'xpath_button_cookies': os.getenv('XPATH_BUTTON_COOKIES_IPR'),
             'xpath_button_pedidos': os.getenv('XPATH_BUTTON_PEDIDOS_IPR'),
             'xpath_select_base': os.getenv('XPATH_SELECT_BASE_IPR'),

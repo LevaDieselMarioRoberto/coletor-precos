@@ -11,7 +11,7 @@ class ColetorIpirangaPostos(ColetorDePreco):
     def __init__(self):
         super().__init__()
 
-        load_dotenv()
+        load_dotenv('C:/Users/titrr/OneDrive - MARIO ROBERTO TRANSP REVENDEDORA D OLEO DIESEL/Leva Diesel/Informatica/projetos/coleta_precos/.env')
         self.VAR = {
             'link': os.getenv('LINK_IPR'),
             'login': os.getenv('LOGIN_IPR_POSTOS'),
