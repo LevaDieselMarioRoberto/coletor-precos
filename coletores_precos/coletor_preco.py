@@ -7,7 +7,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from time import sleep
-import logging
 
 
 class ColetorDePreco(ABC):
@@ -15,9 +14,6 @@ class ColetorDePreco(ABC):
     def __init__(self):
         self.inicio = None
         self.tempo_execucao = None
-
-        self.log_format = '%(asctime)s - %(levelname)s - %(message)s'
-        logging.basicConfig(filename='coletor.log', level=logging.INFO, format=self.log_format, encoding='utf-8')
 
     def inicializa_navegador(self, maximizado):
         """
@@ -113,12 +109,6 @@ class ColetorDePreco(ABC):
 
     def fechar_navegador(self):
         self.navegador.quit()
-    
-    def log(self, msg):
-        logging.info(msg)
-    
-    def log_error(self, msg):
-        logging.error(msg)
 
     @abstractmethod
     def coleta_precos(self, maximizado=False):

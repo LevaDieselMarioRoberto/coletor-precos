@@ -5,6 +5,7 @@ from coletores_precos.coletor_raizen_trr import ColetorRaizenTRR
 from coletores_precos.coletor_vibra_janjao import ColetorVibraJanjao
 from coletores_precos.coletor_ipiranga_postos import ColetorIpirangaPostos
 from planilha import Planilha
+from logger import Logger
 from concurrent.futures import ThreadPoolExecutor
 from time import time
 
@@ -25,6 +26,8 @@ coletor_rzn_trr = ColetorRaizenTRR()
 coletor_ipr_postos = ColetorIpirangaPostos()
 coletor_vbr_jj = ColetorVibraJanjao()
 
+logger = Logger()
+
 funcoes_e_argumentos = [    # Lista de tuplas, sendo a função e seus respectivos argumentos
     (coletor_ipr_trr.coleta_precos, [ipr_trr1, ipr_trr2]),
     (coletor_vbr_trr.coleta_precos, [vbr_trr]),
@@ -34,14 +37,14 @@ funcoes_e_argumentos = [    # Lista de tuplas, sendo a função e seus respectiv
 ]
 
 inicio = time()
+logger.log(f"\n### Iniciando coletas... ###")
 with ThreadPoolExecutor() as executor:  # Executa as funções simultaneamente
     executor.map(lambda x: x[0](*x[1]), funcoes_e_argumentos)
 tempo_total = round(time() - inicio, 2)
-print(f"Tempo de execução: {tempo_total} segundos")
+logger.log(f"Tempo de execução: {tempo_total} segundos")
 
 postos = [ipr_pitstop, ipr_distrito, ipr_gasstation, ipr_itirapua, ipr_ppp, vbr_jj, ipr_trr1, ipr_trr2, vbr_trr, rzn_trr,]
-# for posto in postos:
-#     posto.imprime_precos()
+# for posto in postos: posto.imprime_precos()
 
 planilha = Planilha()
 planilha.salva_planilha(postos)

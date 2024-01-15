@@ -1,4 +1,5 @@
 from coletores_precos.coletor_preco import ColetorDePreco
+from logger import Logger
 from posto import Posto
 from time import time, sleep
 from dotenv import load_dotenv
@@ -34,10 +35,11 @@ class ColetorRaizenTRR(ColetorDePreco):
         max_tentativas = 3
         nome_portal = "Raízen TRR"
         prefixo = "RZNTRR"
+        logger = Logger()
 
         while tentativa <= max_tentativas:
             try:
-                self.log(f"{prefixo} - Inicinando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
+                logger.log(f"{prefixo} - Inicinando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
                 self.navegador = self.inicializa_navegador(maximizado)
                 self.inicio = time()
 
@@ -48,7 +50,7 @@ class ColetorRaizenTRR(ColetorDePreco):
                 self.clica_botao(self.VAR['xpath_button_entrar'])
                 sleep(3)
                 self.navegador.get(self.VAR['link_precos'])     # Acessa a página de preços
-                self.log(f"{prefixo} - Login e acesso a página de pedidos realizados com sucesso")
+                logger.log(f"{prefixo} - Login e acesso a página de pedidos realizados com sucesso")
                 sleep(10)
 
                 # Coleta os preços
@@ -59,19 +61,20 @@ class ColetorRaizenTRR(ColetorDePreco):
 
                 self.fechar_navegador()
                 self.tempo_execucao = round(time() - self.inicio, 2)
-                self.log(f"{prefixo} - Coleta de preços da {nome_portal} realizada com sucesso")
-                self.log(f"{prefixo} - Tempo de execução: {self.tempo_execucao}s")
+                logger.log(f"{prefixo} - Coleta de preços da {nome_portal} realizada com sucesso")
+                logger.log(f"{prefixo} - Tempo de execução: {self.tempo_execucao}s")
                 break
 
-            except:
+            except Exception as e:
                 tentativa += 1
                 self.fechar_navegador()
 
                 if tentativa <= max_tentativas:
-                    self.log_error(f"{prefixo} - Erro na coleta de preços da {nome_portal}")
-                    self.log_error(f"{prefixo} - Nova tentativa de coleta em 30 segundos...")
+                    logger.log_error(f"{prefixo} - Erro na coleta de preços da {nome_portal}")
+                    logger.log_error(f"{prefixo} - Nova tentativa de coleta em 30 segundos...")
                     sleep(30)
                     continue
                 else:
-                    self.log_error(f"\n{prefixo} - Coleta de preços da {nome_portal} não realizada!")
+                    logger.log_error(f"\n{prefixo} - Coleta de preços da {nome_portal} não realizada!")
+                    logger.log_error(f"{prefixo} - Erro: {e}")
                     break

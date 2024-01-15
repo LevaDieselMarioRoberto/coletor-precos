@@ -2,6 +2,7 @@ import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment, Font, PatternFill, Border, Side
 from posto import Posto
+from logger import Logger
 from datetime import datetime
 import os
 
@@ -11,6 +12,7 @@ class Planilha():
     def __init__(self):
         self.df = pd.DataFrame()
         self.arquivo = os.getenv("ARQUIVO_EXCEL")
+        self.logger = Logger()
 
     def cria_df_precos(self, lista_postos:Posto):
         cont = 1
@@ -29,7 +31,7 @@ class Planilha():
         except FileNotFoundError:
             writer = pd.ExcelWriter(self.arquivo, engine='openpyxl', datetime_format='dd/mm/yyyy HH:MM:SS', date_format='dd/mm/yyyy', mode='w')
         except PermissionError:
-            print("Feche o arquivo excel!")
+            self.logger.log("Feche o arquivo excel!")
             num = 1
             self.arquivo = self.arquivo.replace("resultados_precos", f"resultados_precos({num})")
             while True:
@@ -43,10 +45,10 @@ class Planilha():
 
         self.df.to_excel(writer, sheet_name='Precos', index=False)
         writer.close()
-        print(f"Resultados salvos em: {self.arquivo}")
-        self.trata_planilha()
+        self.logger.log(f"Resultados salvos em: {self.arquivo}")
+        self.formata_planilha()
 
-    def trata_planilha(self):
+    def formata_planilha(self):
         workbook = load_workbook(self.arquivo)
         sheet = workbook['Precos']
         sheet.insert_rows(1)
@@ -78,4 +80,4 @@ class Planilha():
         sheet.cell(row=1, column=1).font = Font(size=8)
 
         workbook.save(self.arquivo)
-        print("Planilha tratada com sucesso!")
+        self.logger.log("Planilha formatada com sucesso!")

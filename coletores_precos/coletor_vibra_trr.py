@@ -1,4 +1,5 @@
 from coletores_precos.coletor_preco import ColetorDePreco
+from logger import Logger
 from posto import Posto
 from time import time, sleep
 from dotenv import load_dotenv
@@ -40,10 +41,11 @@ class ColetorVibraTRR(ColetorDePreco):
         max_tentativas = 3
         nome_portal = "Vibra TRR"
         prefixo = "VBRTRR"
+        logger = Logger()
 
         while tentativa <= max_tentativas:
             try:
-                self.log(f"{prefixo} - Inicinando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
+                logger.log(f"{prefixo} - Inicinando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
                 self.navegador = self.inicializa_navegador(maximizado)
                 self.inicio = time()
 
@@ -52,7 +54,7 @@ class ColetorVibraTRR(ColetorDePreco):
                 self.preenche_input(self.VAR['xpath_input_login'], self.VAR['login'])
                 self.preenche_input(self.VAR['xpath_input_senha'], self.VAR['senha'])
                 self.clica_botao(self.VAR['xpath_button_entrar'])
-                self.log(f"{prefixo} - Login realizado com sucesso")
+                logger.log(f"{prefixo} - Login realizado com sucesso")
 
                 # Navegação para a página de pedidos e preenchimento dos campos de quantidade
                 self.navegador.get(self.VAR['link_pedidos'])
@@ -60,46 +62,47 @@ class ColetorVibraTRR(ColetorDePreco):
                 self.preenche_input(self.VAR['id_input_qtdlitros_s500'], 10000, xpath_ou_id='id')
                 self.clica_botao(self.VAR['xpath_button_atualizar'], sleep_time=5)
                 self.clica_botao(self.VAR['xpath_button_atualizar'], sleep_time=5)
-                self.log(f"{prefixo} - Navegação para a página de pedidos e preenchimento dos campos de quantidade realizados com sucesso")
+                logger.log(f"{prefixo} - Navegação para a página de pedidos e preenchimento dos campos de quantidade realizados com sucesso")
 
                 # Seleção de prazo
                 self.seleciona_prazo(self.VAR['id_select_prazo_s10'], self.VAR['prazo'])
                 self.seleciona_prazo(self.VAR['id_select_prazos500'], self.VAR['prazo'])
                 self.clica_botao(self.VAR['xpath_button_atualizar'], sleep_time=8)
-                self.log(f"{prefixo} - Seleção de prazo realizada com sucesso")
+                logger.log(f"{prefixo} - Seleção de prazo realizada com sucesso")
 
                 # Coleta de preços FOB
                 vbr_trr.fob_s10 = self.coleta_valor(self.VAR['xpath_preco_s10'])
                 vbr_trr.fob_s500 = self.coleta_valor(self.VAR['xpath_preco_s500'])
-                self.log(f"{prefixo} - Coleta de preços FOB realizada com sucesso")
+                logger.log(f"{prefixo} - Coleta de preços FOB realizada com sucesso")
 
                 # Alteração de modo
                 self.muda_modo(self.VAR['id_select_modo_s10'], self.VAR['modo'])
                 self.muda_modo(self.VAR['id_select_modo_s500'], self.VAR['modo'])
                 self.clica_botao(self.VAR['xpath_button_atualizar'], sleep_time=5)
                 self.clica_botao(self.VAR['xpath_button_atualizar'], sleep_time=5)
-                self.log(f"{prefixo} - Alteração de modo realizada com sucesso")
+                logger.log(f"{prefixo} - Alteração de modo realizada com sucesso")
 
                 # Coleta de preços CIF
                 vbr_trr.cif_s10 = self.coleta_valor(self.VAR['xpath_preco_s10'])
                 vbr_trr.cif_s500 = self.coleta_valor(self.VAR['xpath_preco_s500'])
-                self.log(f"{prefixo} - Coleta de preços CIF realizada com sucesso")
+                logger.log(f"{prefixo} - Coleta de preços CIF realizada com sucesso")
 
                 self.fechar_navegador()
                 self.tempo_execucao = round(time() - self.inicio, 2)
-                self.log(f"{prefixo} - Coleta de preços da {nome_portal} realizada com sucesso")
-                self.log(f"{prefixo} - Tempo de execução: {self.tempo_execucao}s")
+                logger.log(f"{prefixo} - Coleta de preços da {nome_portal} realizada com sucesso")
+                logger.log(f"{prefixo} - Tempo de execução: {self.tempo_execucao}s")
                 break
 
-            except:
+            except Exception as e:
                 tentativa += 1
                 self.fechar_navegador()
 
                 if tentativa <= max_tentativas:
-                    self.log_error(f"{prefixo} - Erro na coleta de preços da {nome_portal}")
-                    self.log_error(f"{prefixo} - Nova tentativa de coleta em 30 segundos...")
+                    logger.log_error(f"{prefixo} - Erro na coleta de preços da {nome_portal}")
+                    logger.log_error(f"{prefixo} - Nova tentativa de coleta em 30 segundos...")
                     sleep(30)
                     continue
                 else:
-                    self.log_error(f"\n{prefixo} - Coleta de preços da {nome_portal} não realizada!")
+                    logger.log_error(f"\n{prefixo} - Coleta de preços da {nome_portal} não realizada!")
+                    logger.log_error(f"{prefixo} - Erro: {e}")
                     break
