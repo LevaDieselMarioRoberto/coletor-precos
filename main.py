@@ -6,6 +6,7 @@ from coletores_precos.coletor_vibra_janjao import ColetorVibraJanjao
 from coletores_precos.coletor_ipiranga_postos import ColetorIpirangaPostos
 from planilha import Planilha
 from logger import Logger
+from telegram import Telegram
 from concurrent.futures import ThreadPoolExecutor
 from time import time
 
@@ -27,6 +28,7 @@ coletor_ipr_postos = ColetorIpirangaPostos()
 coletor_vbr_jj = ColetorVibraJanjao()
 
 logger = Logger()
+telegram = Telegram()
 
 funcoes_e_argumentos = [    # Lista de tuplas, sendo a função e seus respectivos argumentos
     (coletor_ipr_trr.coleta_precos, [ipr_trr1, ipr_trr2]),

@@ -1,9 +1,10 @@
 import requests
+from logger import Logger
 
 class Telegram:
 
     token = '6549384225:AAEBaKjBcOcY8jL_g6A81L9wIprhQuSZJNY'
-    chat_id = -4066635565
+    chat_id = -1002070343424
     
     def enviar_mensagem(self, msg):
         try:
@@ -11,4 +12,5 @@ class Telegram:
             url = f"https://api.telegram.org/bot{self.token}/sendMessage"
             requests.post(url, data)
         except Exception as e:
-            print("Erro no sendMessage:", e)
+            logger = Logger()
+            logger.log_error("Telegram - Erro no sendMessage:", e)

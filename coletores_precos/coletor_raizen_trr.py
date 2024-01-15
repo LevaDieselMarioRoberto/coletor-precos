@@ -1,6 +1,7 @@
 from coletores_precos.coletor_preco import ColetorDePreco
 from logger import Logger
 from posto import Posto
+from telegram import Telegram
 from time import time, sleep
 from dotenv import load_dotenv
 import os
@@ -11,7 +12,7 @@ class ColetorRaizenTRR(ColetorDePreco):
     def __init__(self):
         super().__init__()
 
-        load_dotenv('C:/Users/titrr/OneDrive - MARIO ROBERTO TRANSP REVENDEDORA D OLEO DIESEL/Leva Diesel/Informatica/projetos/coleta_precos/.env')
+        load_dotenv(self.env)
         self.VAR = {
             'link': os.getenv('LINK_RZN'),
             'login': os.getenv('LOGIN_RZN'),
@@ -33,7 +34,7 @@ class ColetorRaizenTRR(ColetorDePreco):
         """
         tentativa = 1
         max_tentativas = 3
-        nome_portal = "Raízen TRR"
+        nome_portal = "Raízen (TRR)"
         prefixo = "RZNTRR"
         logger = Logger()
 
@@ -75,6 +76,8 @@ class ColetorRaizenTRR(ColetorDePreco):
                     sleep(30)
                     continue
                 else:
+                    telegram = Telegram()
+                    telegram.enviar_mensagem(f"Erro na coleta de preços da {nome_portal} 😕")
                     logger.log_error(f"\n{prefixo} - Coleta de preços da {nome_portal} não realizada!")
                     logger.log_error(f"{prefixo} - Erro: {e}")
                     break

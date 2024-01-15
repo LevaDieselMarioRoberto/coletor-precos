@@ -14,6 +14,7 @@ class ColetorDePreco(ABC):
     def __init__(self):
         self.inicio = None
         self.tempo_execucao = None
+        self.env = 'C:/Users/titrr/OneDrive - MARIO ROBERTO TRANSP REVENDEDORA D OLEO DIESEL/Leva Diesel/Informatica/projetos/coleta_precos/.env'
 
     def inicializa_navegador(self, maximizado):
         """
