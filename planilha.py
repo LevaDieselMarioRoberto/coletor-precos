@@ -3,13 +3,14 @@ from openpyxl import load_workbook
 from openpyxl.styles import Alignment, Font, PatternFill, Border, Side
 from posto import Posto
 from datetime import datetime
+import os
 
 
 class Planilha():
 
     def __init__(self):
         self.df = pd.DataFrame()
-        self.arquivo = f"C:/Users/titrr/OneDrive - MARIO ROBERTO TRANSP REVENDEDORA D OLEO DIESEL/Leva Diesel/Logística/resultados_precos.xlsx"
+        self.arquivo = os.getenv("ARQUIVO_EXCEL")
 
     def cria_df_precos(self, lista_postos:Posto):
         cont = 1
@@ -27,6 +28,18 @@ class Planilha():
             writer = pd.ExcelWriter(self.arquivo, engine='openpyxl', datetime_format='dd/mm/yyyy HH:MM:SS', date_format='dd/mm/yyyy', mode='a', if_sheet_exists='replace')
         except FileNotFoundError:
             writer = pd.ExcelWriter(self.arquivo, engine='openpyxl', datetime_format='dd/mm/yyyy HH:MM:SS', date_format='dd/mm/yyyy', mode='w')
+        except PermissionError:
+            print("Feche o arquivo excel!")
+            num = 1
+            self.arquivo = self.arquivo.replace("resultados_precos", f"resultados_precos({num})")
+            while True:
+                try:
+                    writer = pd.ExcelWriter(self.arquivo, engine='openpyxl', datetime_format='dd/mm/yyyy HH:MM:SS', date_format='dd/mm/yyyy', mode='w')
+                    break
+                except:
+                    self.arquivo = self.arquivo.replace(f"resultados_precos({num})", f"resultados_precos({num+1})")
+                    num += 1
+                    continue
 
         self.df.to_excel(writer, sheet_name='Precos', index=False)
         writer.close()
