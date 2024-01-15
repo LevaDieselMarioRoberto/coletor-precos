@@ -42,7 +42,7 @@ class ColetorVibraJanjao(ColetorDePreco):
 
         while tentativa <= max_tentativas:
             try:
-                print(f"{prefixo} - Inicinando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
+                self.log(f"{prefixo} - Inicinando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
                 self.navegador = self.inicializa_navegador(maximizado)
                 self.inicio = time()
 
@@ -51,18 +51,18 @@ class ColetorVibraJanjao(ColetorDePreco):
                 self.preenche_input(self.VAR['xpath_input_login'], self.VAR['login'])
                 self.preenche_input(self.VAR['xpath_input_senha'], self.VAR['senha'])
                 self.clica_botao(self.VAR['xpath_button_entrar'])
-                print(f"{prefixo} - Login realizado com sucesso")
+                self.log(f"{prefixo} - Login realizado com sucesso")
 
                 # Navegação para a página de pedidos
                 self.navegador.get(self.VAR['link_pedidos'])
-                print(f"{prefixo} - Navegação para a página de pedidos realizada com sucesso")
+                self.log(f"{prefixo} - Navegação para a página de pedidos realizada com sucesso")
 
                 # Coleta de preços FOB
                 vbr_jj.fob_etanol = self.coleta_valor(self.VAR['xpath_preco_etanol'])
                 vbr_jj.fob_gasolina = self.coleta_valor(self.VAR['xpath_preco_gasolina'])
                 vbr_jj.fob_s10 = self.coleta_valor(self.VAR['xpath_preco_s10'])
                 vbr_jj.fob_s500 = self.coleta_valor(self.VAR['xpath_preco_s500'])
-                print(f"{prefixo} - Coleta de preços FOB realizada com sucesso")
+                self.log(f"{prefixo} - Coleta de preços FOB realizada com sucesso")
 
                 # Alteração de modo
                 self.muda_modo(self.VAR['id_select_modo_etanol'], self.VAR['modo'], sleep_time=10)
@@ -71,19 +71,19 @@ class ColetorVibraJanjao(ColetorDePreco):
                 self.muda_modo(self.VAR['id_select_modo_s500'], self.VAR['modo'], sleep_time=10)
                 self.clica_botao(self.VAR['xpath_button_atualizar'], sleep_time=5)
                 self.clica_botao(self.VAR['xpath_button_atualizar'], sleep_time=5)
-                print(f"{prefixo} - Alteração de modo realizada com sucesso")
+                self.log(f"{prefixo} - Alteração de modo realizada com sucesso")
 
                 # Coleta de preços CIF
                 vbr_jj.cif_etanol = self.coleta_valor(self.VAR['xpath_preco_etanol'])
                 vbr_jj.cif_gasolina = self.coleta_valor(self.VAR['xpath_preco_gasolina'])
                 vbr_jj.cif_s10 = self.coleta_valor(self.VAR['xpath_preco_s10'])
                 vbr_jj.cif_s500 = self.coleta_valor(self.VAR['xpath_preco_s500'])
-                print(f"{prefixo} - Coleta de preços CIF realizada com sucesso")
+                self.log(f"{prefixo} - Coleta de preços CIF realizada com sucesso")
 
                 self.fechar_navegador()
                 self.tempo_execucao = round(time() - self.inicio, 2)
-                print(f"{prefixo} - Coleta de preços da {nome_portal} realizada com sucesso")
-                print(f"{prefixo} - Tempo de execução: {self.tempo_execucao}s")
+                self.log(f"{prefixo} - Coleta de preços da {nome_portal} realizada com sucesso")
+                self.log(f"{prefixo} - Tempo de execução: {self.tempo_execucao}s")
                 break
 
             except:
@@ -91,10 +91,10 @@ class ColetorVibraJanjao(ColetorDePreco):
                 self.fechar_navegador()
 
                 if tentativa <= max_tentativas:
-                    print(f"{prefixo} - Erro na coleta de preços da {nome_portal}")
-                    print(f"{prefixo} - Nova tentativa de coleta em 30 segundos...")
+                    self.log_error(f"{prefixo} - Erro na coleta de preços da {nome_portal}")
+                    self.log_error(f"{prefixo} - Nova tentativa de coleta em 30 segundos...")
                     sleep(30)
                     continue
                 else:
-                    print(f"\n{prefixo} - Coleta de preços da {nome_portal} não realizada!")
+                    self.log_error(f"\n{prefixo} - Coleta de preços da {nome_portal} não realizada!")
                     break

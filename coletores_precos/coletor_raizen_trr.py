@@ -37,7 +37,7 @@ class ColetorRaizenTRR(ColetorDePreco):
 
         while tentativa <= max_tentativas:
             try:
-                print(f"{prefixo} - Inicinando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
+                self.log(f"{prefixo} - Inicinando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
                 self.navegador = self.inicializa_navegador(maximizado)
                 self.inicio = time()
 
@@ -48,7 +48,7 @@ class ColetorRaizenTRR(ColetorDePreco):
                 self.clica_botao(self.VAR['xpath_button_entrar'])
                 sleep(3)
                 self.navegador.get(self.VAR['link_precos'])     # Acessa a página de preços
-                print(f"{prefixo} - Login e acesso a página de pedidos realizados com sucesso")
+                self.log(f"{prefixo} - Login e acesso a página de pedidos realizados com sucesso")
                 sleep(10)
 
                 # Coleta os preços
@@ -59,8 +59,8 @@ class ColetorRaizenTRR(ColetorDePreco):
 
                 self.fechar_navegador()
                 self.tempo_execucao = round(time() - self.inicio, 2)
-                print(f"{prefixo} - Coleta de preços da {nome_portal} realizada com sucesso")
-                print(f"{prefixo} - Tempo de execução: {self.tempo_execucao}s")
+                self.log(f"{prefixo} - Coleta de preços da {nome_portal} realizada com sucesso")
+                self.log(f"{prefixo} - Tempo de execução: {self.tempo_execucao}s")
                 break
 
             except:
@@ -68,10 +68,10 @@ class ColetorRaizenTRR(ColetorDePreco):
                 self.fechar_navegador()
 
                 if tentativa <= max_tentativas:
-                    print(f"{prefixo} - Erro na coleta de preços da {nome_portal}")
-                    print(f"{prefixo} - Nova tentativa de coleta em 30 segundos...")
+                    self.log_error(f"{prefixo} - Erro na coleta de preços da {nome_portal}")
+                    self.log_error(f"{prefixo} - Nova tentativa de coleta em 30 segundos...")
                     sleep(30)
                     continue
                 else:
-                    print(f"\n{prefixo} - Coleta de preços da {nome_portal} não realizada!")
+                    self.log_error(f"\n{prefixo} - Coleta de preços da {nome_portal} não realizada!")
                     break

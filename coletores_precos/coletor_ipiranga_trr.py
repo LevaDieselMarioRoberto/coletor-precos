@@ -43,7 +43,7 @@ class ColetorIpirangaTRR(ColetorDePreco):
 
         while tentativa <= max_tentativas:
             try:
-                print(f"{prefixo} - Inicinando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
+                self.log(f"{prefixo} - Inicinando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
                 self.navegador = self.inicializa_navegador(maximizado)
                 self.inicio = time()
 
@@ -54,42 +54,42 @@ class ColetorIpirangaTRR(ColetorDePreco):
                 self.clica_botao(self.VAR['xpath_button_entrar'])
                 self.clica_botao(self.VAR['xpath_button_cookies'])
                 self.clica_botao(self.VAR['xpath_button_pedidos'])
-                print(f"{prefixo} - Login e acesso a página de pedidos realizados com sucesso")
+                self.log(f"{prefixo} - Login e acesso a página de pedidos realizados com sucesso")
 
                 # Troca para o iframe e seleciona a base
                 self.troca_iframe(self.VAR['xpath_iframe'])
                 self.seleciona_opcao_menu_suspenso(self.VAR['xpath_select_base'], self.VAR['base'])
-                print(f"{prefixo} - Troca de iframe e base selecionada com sucesso")
+                self.log(f"{prefixo} - Troca de iframe e base selecionada com sucesso")
 
                 # Coleta os preços do primeiro perfil da TRR
                 ipiranga_trr1.cif_s10 = self.coleta_valor(self.VAR['id_preco_cif_s10'], xpath_ou_id='id')
                 ipiranga_trr1.fob_s10 = self.coleta_valor(self.VAR['id_preco_fob_s10'], xpath_ou_id='id')
                 ipiranga_trr1.cif_s500 = self.coleta_valor(self.VAR['id_preco_cif_s500'], xpath_ou_id='id')
                 ipiranga_trr1.fob_s500 = self.coleta_valor(self.VAR['id_preco_fob_s500'], xpath_ou_id='id')
-                print(f"{prefixo} - Coleta de preços do perfil 1 realizada com sucesso")
+                self.log(f"{prefixo} - Coleta de preços do perfil 1 realizada com sucesso")
 
                 # Troca para o segundo perfil da TRR
                 self.navegador.get(self.VAR['link_pedidos'])
                 self.clica_botao(self.VAR['xpath_button_razao_social'])
                 self.clica_botao(self.VAR['xpath_button_ipr2'])
-                print(f"{prefixo} - Troca para o perfil 2 realizada com sucesso")
+                self.log(f"{prefixo} - Troca para o perfil 2 realizada com sucesso")
 
                 # Troca para o iframe e seleciona a base
                 self.troca_iframe(self.VAR['xpath_iframe'])
                 self.seleciona_opcao_menu_suspenso(self.VAR['xpath_select_base'], self.VAR['base'])
-                print(f"{prefixo} - Troca de iframe e base selecionada com sucesso")
+                self.log(f"{prefixo} - Troca de iframe e base selecionada com sucesso")
 
                 # Coleta os preços do segundo perfil da TRR
                 ipiranga_trr2.cif_s10 = self.coleta_valor(self.VAR['id_preco_cif_s10'], xpath_ou_id='id')
                 ipiranga_trr2.fob_s10 = self.coleta_valor(self.VAR['id_preco_fob_s10'], xpath_ou_id='id')
                 ipiranga_trr2.cif_s500 = self.coleta_valor(self.VAR['id_preco_cif_s500'], xpath_ou_id='id')
                 ipiranga_trr2.fob_s500 = self.coleta_valor(self.VAR['id_preco_fob_s500'], xpath_ou_id='id')
-                print(f"{prefixo} - Coleta de preços do perfil 2 realizada com sucesso")
+                self.log(f"{prefixo} - Coleta de preços do perfil 2 realizada com sucesso")
 
                 self.fechar_navegador()
                 self.tempo_execucao = round(time() - self.inicio, 2)
-                print(f"{prefixo} - Coleta de preços da {nome_portal} realizada com sucesso")
-                print(f"{prefixo} - Tempo de execução: {self.tempo_execucao}s")
+                self.log(f"{prefixo} - Coleta de preços da {nome_portal} realizada com sucesso")
+                self.log(f"{prefixo} - Tempo de execução: {self.tempo_execucao}s")
                 break
 
             except:
@@ -97,10 +97,10 @@ class ColetorIpirangaTRR(ColetorDePreco):
                 self.fechar_navegador()
 
                 if tentativa <= max_tentativas:
-                    print(f"{prefixo} - Erro na coleta de preços da {nome_portal}")
-                    print(f"{prefixo} - Nova tentativa de coleta em 30 segundos...")
+                    self.log_error(f"{prefixo} - Erro na coleta de preços da {nome_portal}")
+                    self.log_error(f"{prefixo} - Nova tentativa de coleta em 30 segundos...")
                     sleep(30)
                     continue
                 else:
-                    print(f"\n{prefixo} - Coleta de preços da {nome_portal} não realizada!")
+                    self.log_error(f"\n{prefixo} - Coleta de preços da {nome_portal} não realizada!")
                     break
