@@ -50,3 +50,5 @@ postos = [ipr_pitstop, ipr_distrito, ipr_gasstation, ipr_itirapua, ipr_ppp, vbr_
 
 planilha = Planilha()
 planilha.salva_planilha(postos)
+
+for posto in postos: posto.compara_precos()

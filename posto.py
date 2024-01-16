@@ -1,3 +1,6 @@
+from telegram import Telegram
+import json
+
 class Posto():
 
     def __init__(self, nome):
@@ -33,3 +36,49 @@ class Posto():
 
         if self.cif_s500 and self.fob_s500 != None:
             print(f"s500           {self.cif_s500}       {self.fob_s500}")
+
+    def compara_precos(self):
+
+        precos_atuais = {       # Cria um dicionário com os preços atuais
+            "CIF Etanol": self.cif_etanol,
+            "FOB Etanol": self.fob_etanol,
+            "CIF Gasolina Ad": self.cif_gasolina_ad,
+            "FOB Gasolina Ad": self.fob_gasolina_ad,
+            "CIF Gasolina": self.cif_gasolina,
+            "FOB Gasolina": self.fob_gasolina,
+            "CIF S10": self.cif_s10,
+            "FOB S10": self.fob_s10,
+            "CIF S500": self.cif_s500,
+            "FOB S500": self.fob_s500
+        }
+
+        arquivo_json = f"C:/Users/titrr/OneDrive - MARIO ROBERTO TRANSP REVENDEDORA D OLEO DIESEL/Leva Diesel/Informatica/projetos/coleta_precos/precos/{self.nome}.json"
+
+        try:    # Tenta abrir o arquivo JSON existente
+            with open(arquivo_json, 'r') as f:
+                precos_anteriores = json.load(f)
+        except FileNotFoundError:
+            precos_anteriores = {}
+
+        mensagem = None
+
+        # Compara os preços atuais com os preços anteriores
+        for chave, valor_atual in precos_atuais.items():
+            valor_anterior = precos_anteriores.get(chave)
+
+            if valor_anterior is not None and valor_atual != valor_anterior:
+
+                if mensagem is None: mensagem = f"❗ Alteração de valor em {self.nome} ❗\n"
+
+                mensagem += f"\n{chave}: {valor_anterior} ➡️ {valor_atual}"
+
+                if valor_atual > valor_anterior: mensagem += " ⤴️ ❌"
+                else: mensagem += " ⤵️ ✅"
+
+        if mensagem is not None:
+            telegram = Telegram()
+            telegram.enviar_mensagem(mensagem)
+
+            # Salva os preços atuais no arquivo JSON
+            with open(arquivo_json, 'w') as f:
+                json.dump(precos_atuais, f, indent=2)
