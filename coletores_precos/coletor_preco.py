@@ -7,14 +7,15 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from time import sleep
-
+import getpass
 
 class ColetorDePreco(ABC):
 
     def __init__(self):
         self.inicio = None
         self.tempo_execucao = None
-        self.env = 'C:/Users/titrr/OneDrive - MARIO ROBERTO TRANSP REVENDEDORA D OLEO DIESEL/Leva Diesel/Informatica/projetos/coleta_precos/.env'
+
+        self.env = f"C:/Users/{getpass.getuser()}/OneDrive - MARIO ROBERTO TRANSP REVENDEDORA D OLEO DIESEL/Leva Diesel/Informatica/projetos/coleta_precos/.env"
 
     def inicializa_navegador(self, maximizado):
         """
