@@ -1,10 +1,16 @@
 import requests
+import getpass
+import os
+from dotenv import load_dotenv
 from logger import Logger
 
 class Telegram:
 
-    token = '6549384225:AAEBaKjBcOcY8jL_g6A81L9wIprhQuSZJNY'
-    chat_id = -1002070343424
+    def __init__(self):
+        self.env = f"C:/Users/{getpass.getuser()}/OneDrive - MARIO ROBERTO TRANSP REVENDEDORA D OLEO DIESEL/Leva Diesel/Informatica/projetos/coleta_precos/.env"
+        load_dotenv(self.env)
+        self.token = os.getenv('TOKEN')
+        self.chat_id = os.getenv('IDCHAT')
     
     def enviar_mensagem(self, msg):
         try:
