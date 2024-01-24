@@ -9,8 +9,9 @@ BASE_DIR = f"C:/Users/{user}/OneDrive - MARIO ROBERTO TRANSP REVENDEDORA D OLEO 
 PLANILHA_DIR = f"C:/Users/{user}/OneDrive - MARIO ROBERTO TRANSP REVENDEDORA D OLEO DIESEL/Leva Diesel/Logística/resultados_precos.xlsx"
 
 ARQUIVO_LOG = BASE_DIR + "dist/coletor.log"
+ARQUIVO_ENV = BASE_DIR + ".env" # Necessário ser explícito para execução de tarefa automática do Windows
 
-load_dotenv()
+load_dotenv(ARQUIVO_ENV)
 
 TELEGRAM_CONFIG = {
     'TOKEN': os.getenv('TOKEN'),
