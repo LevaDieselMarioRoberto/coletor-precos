@@ -1,16 +1,12 @@
 import requests
-import getpass
-import os
-from dotenv import load_dotenv
+from config import TELEGRAM_CONFIG
 from logger import Logger
 
 class Telegram:
 
     def __init__(self):
-        self.env = f"C:/Users/{getpass.getuser()}/OneDrive - MARIO ROBERTO TRANSP REVENDEDORA D OLEO DIESEL/Leva Diesel/Informatica/projetos/coleta_precos/.env"
-        load_dotenv(self.env)
-        self.token = os.getenv('TOKEN')
-        self.chat_id = os.getenv('IDCHAT')
+        self.token = TELEGRAM_CONFIG['TOKEN']
+        self.chat_id = TELEGRAM_CONFIG['IDCHAT']
     
     def enviar_mensagem(self, msg):
         try:

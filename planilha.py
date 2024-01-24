@@ -1,17 +1,17 @@
 import pandas as pd
-import getpass
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment, Font, PatternFill, Border, Side
 from posto import Posto
 from logger import Logger
 from datetime import datetime
+from config import PLANILHA_DIR
 
 
 class Planilha():
 
     def __init__(self):
         self.df = pd.DataFrame()
-        self.arquivo = f"C:/Users/{getpass.getuser()}/OneDrive - MARIO ROBERTO TRANSP REVENDEDORA D OLEO DIESEL/Leva Diesel/Logística/resultados_precos.xlsx"
+        self.arquivo = PLANILHA_DIR
         self.logger = Logger()
 
     def cria_df_precos(self, lista_postos:Posto):

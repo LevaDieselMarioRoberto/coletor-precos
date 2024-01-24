@@ -1,5 +1,6 @@
 from telegram import Telegram
-import json, getpass
+from config import BASE_DIR
+import json
 
 class Posto():
 
@@ -52,7 +53,7 @@ class Posto():
             "FOB S500": self.fob_s500
         }
 
-        arquivo_json = f"C:/Users/{getpass.getuser()}/OneDrive - MARIO ROBERTO TRANSP REVENDEDORA D OLEO DIESEL/Leva Diesel/Informatica/projetos/coleta_precos/precos/{self.nome}.json"
+        arquivo_json = BASE_DIR + f"precos/{self.nome}.json"
 
         try:    # Tenta abrir o arquivo JSON existente
             with open(arquivo_json, 'r') as f:
@@ -69,7 +70,7 @@ class Posto():
             if valor_anterior is not None and valor_atual is not None:
                 if valor_atual != valor_anterior:
 
-                    if mensagem is None: mensagem = f"❗ Alteração de valor em {self.nome} ❗\n"
+                    if mensagem is None: mensagem = f"❗ Alteração em {self.nome}:\n"
 
                     mensagem += f"\n{chave}: {valor_anterior} ➡️ {valor_atual}"
 

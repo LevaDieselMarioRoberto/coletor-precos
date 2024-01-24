@@ -3,42 +3,13 @@ from logger import Logger
 from posto import Posto
 from telegram import Telegram
 from time import time, sleep
-from dotenv import load_dotenv
-import os
+from config import VAR_IPR_POSTOS as VAR
 
 
 class ColetorIpirangaPostos(ColetorDePreco):
 
     def __init__(self):
         super().__init__()
-
-        load_dotenv(self.env)
-        self.VAR = {
-            'link': os.getenv('LINK_IPR'),
-            'login': os.getenv('LOGIN_IPR_POSTOS'),
-            'senha': os.getenv('SENHA_IPR_POSTOS'),
-            'xpath_input_login': os.getenv('XPATH_INPUT_LOGIN_IPR'),
-            'xpath_input_senha': os.getenv('XPATH_INPUT_SENHA_IPR'),
-            'xpath_button_entrar': os.getenv('XPATH_BUTTON_ENTRAR_IPR'),
-            'xpath_button_cookies': os.getenv('XPATH_BUTTON_COOKIES_IPR'),
-            'link_pedidos': os.getenv('LINK_PEDIDOS_IPR'),
-            'xpath_button_razaosocial': os.getenv('XPATH_BUTTON_RAZAOSOCIAL_IPR'),
-            'xpath_iframe': os.getenv('XPATH_IFRAME'),
-            'id_preco_cif_etanol': os.getenv('ID_PRECO_CIF_ETANOL_IPR'),
-            'id_preco_fob_etanol': os.getenv('ID_PRECO_FOB_ETANOL_IPR'),
-            'id_preco_cif_gasolina': os.getenv('ID_PRECO_CIF_GASOLINA_IPR'),
-            'id_preco_fob_gasolina': os.getenv('ID_PRECO_FOB_GASOLINA_IPR'),
-            'id_preco_cif_gasolinaadt': os.getenv('ID_PRECO_CIF_GASOLINAADT_IPR'),
-            'id_preco_fob_gasolinaadt': os.getenv('ID_PRECO_FOB_GASOLINAADT_IPR'),
-            'id_preco_cif_s10': os.getenv('ID_PRECO_CIF_S10_IPR'),
-            'id_preco_fob_s10': os.getenv('ID_PRECO_FOB_S10_IPR'),
-            'id_preco_cif_s500': os.getenv('ID_PRECO_CIF_S500_IPR'),
-            'id_preco_fob_s500': os.getenv('ID_PRECO_FOB_S500_IPR'),
-            'xpath_button_distrito': os.getenv('XPATH_BUTTON_DISTRITO_IPR'),
-            'xpath_button_itirapua': os.getenv('XPATH_BUTTON_ITIRAPUA_IPR'),
-            'xpath_button_ppp': os.getenv('XPATH_BUTTON_PPP_IPR'),
-            'xpath_button_pitstop': os.getenv('XPATH_BUTTON_PITSTOP_IPR')
-        }
 
     def coleta_precos(self, ipr_gasstation:Posto, ipr_distrito:Posto, ipr_itirapua:Posto, ipr_ppp:Posto, ipr_pitstop:Posto, maximizado=False):
         """
@@ -57,66 +28,66 @@ class ColetorIpirangaPostos(ColetorDePreco):
                 self.inicio = time()
 
                 # Login na página principal
-                self.navegador.get(self.VAR['link'])
-                self.preenche_input(self.VAR['xpath_input_login'], self.VAR['login'])
-                self.preenche_input(self.VAR['xpath_input_senha'], self.VAR['senha'])
-                self.clica_botao(self.VAR['xpath_button_entrar'])
-                self.clica_botao(self.VAR['xpath_button_cookies'])
+                self.navegador.get(VAR['link'])
+                self.preenche_input(VAR['xpath_input_login'], VAR['login'])
+                self.preenche_input(VAR['xpath_input_senha'], VAR['senha'])
+                self.clica_botao(VAR['xpath_button_entrar'])
+                self.clica_botao(VAR['xpath_button_cookies'])
                 logger.log(f"{prefixo} - Login realizado com sucesso")
 
                 self.seleciona_filial()                                     # Gás Station
-                ipr_gasstation.cif_etanol = self.coleta_valor( self.VAR['id_preco_cif_etanol'], xpath_ou_id='id')
-                ipr_gasstation.fob_etanol = self.coleta_valor( self.VAR['id_preco_fob_etanol'], xpath_ou_id='id')
-                ipr_gasstation.cif_gasolina = self.coleta_valor( self.VAR['id_preco_cif_gasolina'], xpath_ou_id='id')
-                ipr_gasstation.fob_gasolina = self.coleta_valor( self.VAR['id_preco_fob_gasolina'], xpath_ou_id='id')
-                ipr_gasstation.cif_gasolina_ad = self.coleta_valor( self.VAR['id_preco_cif_gasolinaadt'], xpath_ou_id='id')
-                ipr_gasstation.fob_gasolina_ad = self.coleta_valor( self.VAR['id_preco_fob_gasolinaadt'], xpath_ou_id='id')
-                ipr_gasstation.cif_s10 = self.coleta_valor( self.VAR['id_preco_cif_s10'], xpath_ou_id='id')
-                ipr_gasstation.fob_s10 = self.coleta_valor( self.VAR['id_preco_fob_s10'], xpath_ou_id='id')
+                ipr_gasstation.cif_etanol = self.coleta_valor( VAR['id_preco_cif_etanol'], xpath_ou_id='id')
+                ipr_gasstation.fob_etanol = self.coleta_valor( VAR['id_preco_fob_etanol'], xpath_ou_id='id')
+                ipr_gasstation.cif_gasolina = self.coleta_valor( VAR['id_preco_cif_gasolina'], xpath_ou_id='id')
+                ipr_gasstation.fob_gasolina = self.coleta_valor( VAR['id_preco_fob_gasolina'], xpath_ou_id='id')
+                ipr_gasstation.cif_gasolina_ad = self.coleta_valor( VAR['id_preco_cif_gasolinaadt'], xpath_ou_id='id')
+                ipr_gasstation.fob_gasolina_ad = self.coleta_valor( VAR['id_preco_fob_gasolinaadt'], xpath_ou_id='id')
+                ipr_gasstation.cif_s10 = self.coleta_valor( VAR['id_preco_cif_s10'], xpath_ou_id='id')
+                ipr_gasstation.fob_s10 = self.coleta_valor( VAR['id_preco_fob_s10'], xpath_ou_id='id')
                 logger.log(f"{prefixo} - Coleta de preços do Gás Station realizada com sucesso")
 
-                self.seleciona_filial(self.VAR['xpath_button_distrito'])    # Distrito
-                ipr_distrito.cif_etanol = self.coleta_valor(self.VAR['id_preco_cif_etanol'], xpath_ou_id='id')
-                ipr_distrito.fob_etanol = self.coleta_valor(self.VAR['id_preco_fob_etanol'], xpath_ou_id='id')
-                ipr_distrito.cif_gasolina = self.coleta_valor(self.VAR['id_preco_cif_gasolina'], xpath_ou_id='id')
-                ipr_distrito.fob_gasolina = self.coleta_valor(self.VAR['id_preco_fob_gasolina'], xpath_ou_id='id')
-                ipr_distrito.cif_s10 = self.coleta_valor(self.VAR['id_preco_cif_s10'], xpath_ou_id='id')
-                ipr_distrito.fob_s10 = self.coleta_valor(self.VAR['id_preco_fob_s10'], xpath_ou_id='id')
-                ipr_distrito.cif_s500 = self.coleta_valor(self.VAR['id_preco_cif_s500'], xpath_ou_id='id')
-                ipr_distrito.fob_s500 = self.coleta_valor(self.VAR['id_preco_fob_s500'], xpath_ou_id='id')
+                self.seleciona_filial(VAR['xpath_button_distrito'])    # Distrito
+                ipr_distrito.cif_etanol = self.coleta_valor(VAR['id_preco_cif_etanol'], xpath_ou_id='id')
+                ipr_distrito.fob_etanol = self.coleta_valor(VAR['id_preco_fob_etanol'], xpath_ou_id='id')
+                ipr_distrito.cif_gasolina = self.coleta_valor(VAR['id_preco_cif_gasolina'], xpath_ou_id='id')
+                ipr_distrito.fob_gasolina = self.coleta_valor(VAR['id_preco_fob_gasolina'], xpath_ou_id='id')
+                ipr_distrito.cif_s10 = self.coleta_valor(VAR['id_preco_cif_s10'], xpath_ou_id='id')
+                ipr_distrito.fob_s10 = self.coleta_valor(VAR['id_preco_fob_s10'], xpath_ou_id='id')
+                ipr_distrito.cif_s500 = self.coleta_valor(VAR['id_preco_cif_s500'], xpath_ou_id='id')
+                ipr_distrito.fob_s500 = self.coleta_valor(VAR['id_preco_fob_s500'], xpath_ou_id='id')
                 logger.log(f"{prefixo} - Coleta de preços do Distrito realizada com sucesso")
 
-                self.seleciona_filial(self.VAR['xpath_button_itirapua'])    # Itirapuã
-                ipr_itirapua.cif_etanol = self.coleta_valor(self.VAR['id_preco_cif_etanol'], xpath_ou_id='id')
-                ipr_itirapua.fob_etanol = self.coleta_valor(self.VAR['id_preco_fob_etanol'], xpath_ou_id='id')
-                ipr_itirapua.cif_gasolina = self.coleta_valor(self.VAR['id_preco_cif_gasolina'], xpath_ou_id='id')
-                ipr_itirapua.fob_gasolina = self.coleta_valor(self.VAR['id_preco_fob_gasolina'], xpath_ou_id='id')
-                ipr_itirapua.cif_s10 = self.coleta_valor(self.VAR['id_preco_cif_s10'], xpath_ou_id='id')
-                ipr_itirapua.fob_s10 = self.coleta_valor(self.VAR['id_preco_fob_s10'], xpath_ou_id='id')
-                ipr_itirapua.cif_s500 = self.coleta_valor(self.VAR['id_preco_cif_s500'], xpath_ou_id='id')
-                ipr_itirapua.fob_s500 = self.coleta_valor(self.VAR['id_preco_fob_s500'], xpath_ou_id='id')
+                self.seleciona_filial(VAR['xpath_button_itirapua'])    # Itirapuã
+                ipr_itirapua.cif_etanol = self.coleta_valor(VAR['id_preco_cif_etanol'], xpath_ou_id='id')
+                ipr_itirapua.fob_etanol = self.coleta_valor(VAR['id_preco_fob_etanol'], xpath_ou_id='id')
+                ipr_itirapua.cif_gasolina = self.coleta_valor(VAR['id_preco_cif_gasolina'], xpath_ou_id='id')
+                ipr_itirapua.fob_gasolina = self.coleta_valor(VAR['id_preco_fob_gasolina'], xpath_ou_id='id')
+                ipr_itirapua.cif_s10 = self.coleta_valor(VAR['id_preco_cif_s10'], xpath_ou_id='id')
+                ipr_itirapua.fob_s10 = self.coleta_valor(VAR['id_preco_fob_s10'], xpath_ou_id='id')
+                ipr_itirapua.cif_s500 = self.coleta_valor(VAR['id_preco_cif_s500'], xpath_ou_id='id')
+                ipr_itirapua.fob_s500 = self.coleta_valor(VAR['id_preco_fob_s500'], xpath_ou_id='id')
                 logger.log(f"{prefixo} - Coleta de preços de Itirapuã realizada com sucesso")
 
-                self.seleciona_filial(self.VAR['xpath_button_ppp'])         # PPP
-                ipr_ppp.cif_etanol = self.coleta_valor(self.VAR['id_preco_cif_etanol'], xpath_ou_id='id')
-                ipr_ppp.fob_etanol = self.coleta_valor(self.VAR['id_preco_fob_etanol'], xpath_ou_id='id')
-                ipr_ppp.cif_gasolina = self.coleta_valor(self.VAR['id_preco_cif_gasolina'], xpath_ou_id='id')
-                ipr_ppp.fob_gasolina = self.coleta_valor(self.VAR['id_preco_fob_gasolina'], xpath_ou_id='id')
-                ipr_ppp.cif_s10 = self.coleta_valor(self.VAR['id_preco_cif_s10'], xpath_ou_id='id')
-                ipr_ppp.fob_s10 = self.coleta_valor(self.VAR['id_preco_fob_s10'], xpath_ou_id='id')
+                self.seleciona_filial(VAR['xpath_button_ppp'])         # PPP
+                ipr_ppp.cif_etanol = self.coleta_valor(VAR['id_preco_cif_etanol'], xpath_ou_id='id')
+                ipr_ppp.fob_etanol = self.coleta_valor(VAR['id_preco_fob_etanol'], xpath_ou_id='id')
+                ipr_ppp.cif_gasolina = self.coleta_valor(VAR['id_preco_cif_gasolina'], xpath_ou_id='id')
+                ipr_ppp.fob_gasolina = self.coleta_valor(VAR['id_preco_fob_gasolina'], xpath_ou_id='id')
+                ipr_ppp.cif_s10 = self.coleta_valor(VAR['id_preco_cif_s10'], xpath_ou_id='id')
+                ipr_ppp.fob_s10 = self.coleta_valor(VAR['id_preco_fob_s10'], xpath_ou_id='id')
                 logger.log(f"{prefixo} - Coleta de preços do PPP realizada com sucesso")
 
-                self.seleciona_filial(self.VAR['xpath_button_pitstop'])     # Pit Stop
-                ipr_pitstop.cif_etanol = self.coleta_valor(self.VAR['id_preco_cif_etanol'], xpath_ou_id='id')
-                ipr_pitstop.fob_etanol = self.coleta_valor(self.VAR['id_preco_fob_etanol'], xpath_ou_id='id')
-                ipr_pitstop.cif_gasolina = self.coleta_valor(self.VAR['id_preco_cif_gasolina'], xpath_ou_id='id')
-                ipr_pitstop.fob_gasolina = self.coleta_valor(self.VAR['id_preco_fob_gasolina'], xpath_ou_id='id')
-                ipr_pitstop.cif_gasolina_ad = self.coleta_valor(self.VAR['id_preco_cif_gasolinaadt'], xpath_ou_id='id')
-                ipr_pitstop.fob_gasolina_ad = self.coleta_valor(self.VAR['id_preco_fob_gasolinaadt'], xpath_ou_id='id')
-                ipr_pitstop.cif_s10 = self.coleta_valor(self.VAR['id_preco_cif_s10'], xpath_ou_id='id')
-                ipr_pitstop.fob_s10 = self.coleta_valor(self.VAR['id_preco_fob_s10'], xpath_ou_id='id')
-                ipr_pitstop.cif_s500 = self.coleta_valor(self.VAR['id_preco_cif_s500'], xpath_ou_id='id')
-                ipr_pitstop.fob_s500 = self.coleta_valor(self.VAR['id_preco_fob_s500'], xpath_ou_id='id')
+                self.seleciona_filial(VAR['xpath_button_pitstop'])     # Pit Stop
+                ipr_pitstop.cif_etanol = self.coleta_valor(VAR['id_preco_cif_etanol'], xpath_ou_id='id')
+                ipr_pitstop.fob_etanol = self.coleta_valor(VAR['id_preco_fob_etanol'], xpath_ou_id='id')
+                ipr_pitstop.cif_gasolina = self.coleta_valor(VAR['id_preco_cif_gasolina'], xpath_ou_id='id')
+                ipr_pitstop.fob_gasolina = self.coleta_valor(VAR['id_preco_fob_gasolina'], xpath_ou_id='id')
+                ipr_pitstop.cif_gasolina_ad = self.coleta_valor(VAR['id_preco_cif_gasolinaadt'], xpath_ou_id='id')
+                ipr_pitstop.fob_gasolina_ad = self.coleta_valor(VAR['id_preco_fob_gasolinaadt'], xpath_ou_id='id')
+                ipr_pitstop.cif_s10 = self.coleta_valor(VAR['id_preco_cif_s10'], xpath_ou_id='id')
+                ipr_pitstop.fob_s10 = self.coleta_valor(VAR['id_preco_fob_s10'], xpath_ou_id='id')
+                ipr_pitstop.cif_s500 = self.coleta_valor(VAR['id_preco_cif_s500'], xpath_ou_id='id')
+                ipr_pitstop.fob_s500 = self.coleta_valor(VAR['id_preco_fob_s500'], xpath_ou_id='id')
                 logger.log(f"{prefixo} - Coleta de preços do Pit Stop realizada com sucesso")
 
                 self.fechar_navegador()
@@ -145,13 +116,13 @@ class ColetorIpirangaPostos(ColetorDePreco):
         """
         Seleciona uma filial (posto) específica no menu suspenso.
         """
-        self.navegador.get(self.VAR['link_pedidos'])
+        self.navegador.get(VAR['link_pedidos'])
         sleep(3)
 
         if str(filial) != '':
-            self.clica_botao(self.VAR['xpath_button_razaosocial'])
+            self.clica_botao(VAR['xpath_button_razaosocial'])
             self.clica_botao(filial)
-            self.navegador.get(self.VAR['link_pedidos'])
+            self.navegador.get(VAR['link_pedidos'])
             sleep(2)
 
-        self.troca_iframe(self.VAR['xpath_iframe'])
+        self.troca_iframe(VAR['xpath_iframe'])

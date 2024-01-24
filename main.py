@@ -11,6 +11,7 @@ from telegram import Telegram
 from concurrent.futures import ThreadPoolExecutor
 from time import time
 
+
 if datetime.now().hour < 20:
 
     ipr_trr1 = Posto("Ipiranga TRR 1")
