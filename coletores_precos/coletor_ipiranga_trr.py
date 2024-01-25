@@ -20,6 +20,7 @@ class ColetorIpirangaTRR(ColetorDePreco):
         nome_portal = "Ipiranga (TRR)"
         prefixo = "IPRTRR"
         logger = Logger()
+        telegram = Telegram()
 
         while tentativa <= max_tentativas:
             try:
@@ -70,6 +71,8 @@ class ColetorIpirangaTRR(ColetorDePreco):
                 self.tempo_execucao = round(time() - self.inicio, 2)
                 logger.log(f"{prefixo} - Coleta de preços da {nome_portal} realizada com sucesso")
                 logger.log(f"{prefixo} - Tempo de execução: {self.tempo_execucao}s")
+
+                if self.esta_com_erro(prefixo): telegram.enviar_mensagem(f"Coleta de preços da {nome_portal} normalizada 😎")
                 break
 
             except Exception as e:
@@ -82,8 +85,8 @@ class ColetorIpirangaTRR(ColetorDePreco):
                     sleep(30)
                     continue
                 else:
-                    telegram = Telegram()
-                    telegram.enviar_mensagem(f"Erro na coleta de preços da {nome_portal} 😕")
+                    if self.esta_com_erro(prefixo, e): pass
+                    else: telegram.enviar_mensagem(f"Erro na coleta de preços da {nome_portal} 😕")
                     logger.log_error(f"\n{prefixo} - Coleta de preços da {nome_portal} não realizada!")
                     logger.log_error(f"{prefixo} - Erro: {e}")
                     break

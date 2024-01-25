@@ -7,15 +7,15 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from time import sleep
-import getpass
+from config import BASE_DIR
+import json
+
 
 class ColetorDePreco(ABC):
 
     def __init__(self):
         self.inicio = None
         self.tempo_execucao = None
-
-        self.env = f"C:/Users/{getpass.getuser()}/OneDrive - MARIO ROBERTO TRANSP REVENDEDORA D OLEO DIESEL/Leva Diesel/Informatica/projetos/coleta_precos/.env"
 
     def inicializa_navegador(self, maximizado):
         """
@@ -110,7 +110,29 @@ class ColetorDePreco(ABC):
         sleep(1)
 
     def fechar_navegador(self):
+        """ 
+        Fecha o navegador. 
+        """
         self.navegador.quit()
+
+    def esta_com_erro(self, filename, erro=None):
+        """
+        Verifica se a última coleta de preços obteve erro.
+        """
+
+        arquivo_json = BASE_DIR + f"dist/{filename}-erro.json"
+
+        try:
+            with open(arquivo_json, 'r') as f: erro_anterior = json.load(f)
+        except: erro_anterior = {}
+
+        if erro_anterior != {}:
+            if erro == None:
+                with open(arquivo_json, 'w') as f: json.dump({}, f, indent=2)
+            return True
+        else:
+            with open(arquivo_json, 'w') as f: json.dump({"erro": str(erro)}, f, indent=2)
+            return False
 
     @abstractmethod
     def coleta_precos(self, maximizado=False):
