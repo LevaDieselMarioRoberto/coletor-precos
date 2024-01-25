@@ -131,7 +131,8 @@ class ColetorDePreco(ABC):
                 with open(arquivo_json, 'w') as f: json.dump({}, f, indent=2)
             return True
         else:
-            with open(arquivo_json, 'w') as f: json.dump({"erro": str(erro)}, f, indent=2)
+            if erro != None:
+                with open(arquivo_json, 'w') as f: json.dump({"erro": str(erro)}, f, indent=2)
             return False
 
     @abstractmethod
