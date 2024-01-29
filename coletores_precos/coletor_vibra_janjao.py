@@ -82,6 +82,6 @@ class ColetorVibraJanjao(ColetorDePreco):
                 else:
                     if self.esta_com_erro(prefixo, e): pass
                     else: telegram.enviar_mensagem(f"Erro na coleta de preços da {nome_portal} 😕")
-                    logger.log_error(f"\n{prefixo} - Coleta de preços da {nome_portal} não realizada!")
+                    logger.log_error(f"{prefixo} - Coleta de preços da {nome_portal} não realizada!")
                     logger.log_error(f"{prefixo} - Erro: {e}")
                     break

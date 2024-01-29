@@ -16,6 +16,7 @@ class ColetorDePreco(ABC):
     def __init__(self):
         self.inicio = None
         self.tempo_execucao = None
+        self.navegador = None
 
     def inicializa_navegador(self, maximizado):
         """
