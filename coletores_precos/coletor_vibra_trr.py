@@ -25,7 +25,7 @@ class ColetorVibraTRR(ColetorDePreco):
         while tentativa <= max_tentativas:
             try:
                 logger.log(f"{prefixo} - Inicinando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
-                self.navegador = self.inicializa_navegador(maximizado)
+                self.navegador = self.inicializa_navegador(maximizado, browser='firefox')
                 self.inicio = time()
 
                 # Login na página principal
@@ -44,7 +44,9 @@ class ColetorVibraTRR(ColetorDePreco):
                 logger.log(f"{prefixo} - Navegação para a página de pedidos e preenchimento dos campos de quantidade realizados com sucesso")
 
                 # Seleção de prazo
+                sleep(7)
                 self.seleciona_prazo(VAR['id_select_prazo_s10'], VAR['prazo'])
+                sleep(7)
                 self.seleciona_prazo(VAR['id_select_prazos500'], VAR['prazo'])
                 self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=8)
                 logger.log(f"{prefixo} - Seleção de prazo realizada com sucesso")
@@ -55,8 +57,9 @@ class ColetorVibraTRR(ColetorDePreco):
                 logger.log(f"{prefixo} - Coleta de preços FOB realizada com sucesso")
 
                 # Alteração de modo
-                self.muda_modo(VAR['id_select_modo_s10'], VAR['modo'])
-                self.muda_modo(VAR['id_select_modo_s500'], VAR['modo'])
+                sleep(7)
+                self.muda_modo(VAR['id_select_modo_s10'], VAR['modo'], sleep_time=7)
+                self.muda_modo(VAR['id_select_modo_s500'], VAR['modo'], sleep_time=7)
                 self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
                 self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
                 logger.log(f"{prefixo} - Alteração de modo realizada com sucesso")

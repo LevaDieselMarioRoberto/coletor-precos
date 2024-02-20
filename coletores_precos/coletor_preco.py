@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service as EdgeService
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -18,11 +20,12 @@ class ColetorDePreco(ABC):
         self.tempo_execucao = None
         self.navegador = None
 
-    def inicializa_navegador(self, maximizado):
+    def inicializa_navegador(self, maximizado, browser='edge'):
         """
         Inicializa uma instância do navegador Edge com opções específicas.
         """
-        options = webdriver.EdgeOptions()
+        if browser == 'edge': options = webdriver.EdgeOptions()
+        elif browser == 'firefox': options = webdriver.FirefoxOptions()
 
         if maximizado:
             options.add_argument("--start-maximized")
@@ -30,13 +33,17 @@ class ColetorDePreco(ABC):
         else:
             options.add_argument("--headless")
             options.add_argument("--disable-gpu")
-            options.add_argument("--window-size=1920x1080")
+            if browser == 'edge': options.add_argument("--window-size=1920x1080")
 
-        options.add_argument("--enable-chrome-browser-cloud-management")
         options.add_argument("--log-level=1")
 
-        svc = EdgeService(EdgeChromiumDriverManager().install())
-        navegador = webdriver.Edge(service=svc, options=options)
+        if browser == 'edge':
+            options.add_argument("--enable-chrome-browser-cloud-management")
+            svc = EdgeService(EdgeChromiumDriverManager().install())
+            navegador = webdriver.Edge(service=svc, options=options)
+        elif browser == 'firefox':
+            svc = FirefoxService(executable_path=GeckoDriverManager().install())
+            navegador = webdriver.Firefox(service=svc, options=options)
 
         return navegador
 
