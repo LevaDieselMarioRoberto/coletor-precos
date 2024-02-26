@@ -61,7 +61,7 @@ class ColetorVibraTRR(ColetorDePreco):
                 self.muda_modo(VAR['id_select_modo_s10'], VAR['modo'], sleep_time=7)
                 self.muda_modo(VAR['id_select_modo_s500'], VAR['modo'], sleep_time=7)
                 self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
-                self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
+                self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=10)
                 logger.log(f"{prefixo} - Alteração de modo realizada com sucesso")
 
                 # Coleta de preços CIF
