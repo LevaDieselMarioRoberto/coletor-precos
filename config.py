@@ -74,6 +74,7 @@ VAR_VBR_TRR = {
     'xpath_input_senha': os.getenv('XPATH_INPUT_SENHA_VBR'),
     'xpath_button_entrar': os.getenv('XPATH_BUTTON_ENTRAR_VBR'),
     'link_pedidos': os.getenv('LINK_PEDIDOS_VBR'),
+    'xpath_checkbox_revenda': os.getenv('XPATH_CHECKBOX_REVENDA_VBR'),
     'id_input_qtdlitros_s10': os.getenv('ID_INPUT_QTDLITROS_S10_VBR'),
     'id_input_qtdlitros_s500': os.getenv('ID_INPUT_QTDLITROS_S500_VBR'),
     'xpath_button_atualizar': os.getenv('XPATH_BUTTON_ATUALIZAR_VBR'),

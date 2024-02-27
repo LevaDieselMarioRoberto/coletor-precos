@@ -37,6 +37,9 @@ class ColetorVibraTRR(ColetorDePreco):
 
                 # Navegação para a página de pedidos e preenchimento dos campos de quantidade
                 self.navegador.get(VAR['link_pedidos'])
+                self.clica_botao(VAR['xpath_checkbox_revenda'], sleep_time=8)
+                logger.log(f"{prefixo} - Selecionou 'Revenda'")
+                sleep(5)
                 self.preenche_input(VAR['id_input_qtdlitros_s10'], 10000, xpath_ou_id='id')
                 self.preenche_input(VAR['id_input_qtdlitros_s500'], 10000, xpath_ou_id='id')
                 self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
