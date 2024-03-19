@@ -24,7 +24,7 @@ class ColetorIpirangaPostos(ColetorDePreco):
 
         while tentativa <= max_tentativas:
             try:
-                logger.log(f"{prefixo} - Inicinando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
+                logger.log(f"{prefixo} - Iniciando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
                 self.navegador = self.inicializa_navegador(maximizado)
                 self.inicio = time()
 

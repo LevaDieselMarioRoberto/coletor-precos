@@ -24,7 +24,7 @@ class ColetorIpirangaTRR(ColetorDePreco):
 
         while tentativa <= max_tentativas:
             try:
-                logger.log(f"{prefixo} - Inicinando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
+                logger.log(f"{prefixo} - Iniciando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
                 self.navegador = self.inicializa_navegador(maximizado)
                 self.inicio = time()
 
@@ -34,7 +34,7 @@ class ColetorIpirangaTRR(ColetorDePreco):
                 self.preenche_input(VAR['xpath_input_senha'], VAR['senha'])
                 self.clica_botao(VAR['xpath_button_entrar'])
                 self.clica_botao(VAR['xpath_button_cookies'])
-                self.clica_botao(VAR['xpath_button_pedidos'])
+                self.navegador.get(VAR['link_pedidos'])
                 logger.log(f"{prefixo} - Login e acesso a página de pedidos realizados com sucesso")
 
                 # Troca para o iframe e seleciona a base
