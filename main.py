@@ -72,7 +72,13 @@ if CONTROLS['COLETA_HABILITADA'] and datetime.now().hour < 20:
     tempo_total = round(time() - inicio, 2)
     logger.log(f"Tempo de execução: {tempo_total} segundos")
 
-    postos = [ipr_pitstop, ipr_distrito, ipr_gasstation, ipr_itirapua, ipr_ppp, vbr_jj, ipr_trr1, ipr_trr2, vbr_trr, rzn_trr,]
+    postos = []
+
+    if CONTROLS['COLETAR_IPR_POSTOS']: postos.extend([ipr_gasstation, ipr_distrito, ipr_itirapua, ipr_ppp, ipr_pitstop])
+    if CONTROLS['COLETAR_VBR_JJ']: postos.append(vbr_jj)
+    if CONTROLS['COLETAR_IPR_TRR']: postos.extend([ipr_trr1, ipr_trr2])
+    if CONTROLS['COLETAR_VBR_TRR']: postos.append(vbr_trr)
+    if CONTROLS['COLETAR_RZN_TRR']: postos.append(rzn_trr)
 
     if CONTROLS['IMPRIME_PRECOS_TERMINAL']:
         for posto in postos: posto.imprime_precos()
