@@ -74,7 +74,7 @@ if CONTROLS['COLETA_HABILITADA'] and datetime.now().hour < 20:
 
     postos = []
 
-    if CONTROLS['COLETAR_IPR_POSTOS']: postos.extend([ipr_gasstation, ipr_distrito, ipr_itirapua, ipr_ppp, ipr_pitstop])
+    if CONTROLS['COLETAR_IPR_POSTOS']: postos.extend([ipr_pitstop, ipr_distrito, ipr_gasstation, ipr_itirapua, ipr_ppp])
     if CONTROLS['COLETAR_VBR_JJ']: postos.append(vbr_jj)
     if CONTROLS['COLETAR_IPR_TRR']: postos.extend([ipr_trr1, ipr_trr2])
     if CONTROLS['COLETAR_VBR_TRR']: postos.append(vbr_trr)
