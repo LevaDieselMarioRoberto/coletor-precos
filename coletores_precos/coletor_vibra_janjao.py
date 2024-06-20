@@ -25,47 +25,43 @@ class ColetorVibraJanjao(ColetorDePreco):
         while tentativa <= max_tentativas:
             try:
                 logger.log(f"{prefixo} - Iniciando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
-                self.navegador = self.inicializa_navegador(maximizado, browser='firefox')
+                self.navegador = self.inicializa_navegador(maximizado)
                 self.inicio = time()
 
                 # Login na página principal
-                self.navegador.get(VAR['link'])
+                self.navegador.get(VAR['link_pedidos'])
                 self.preenche_input(VAR['xpath_input_login'], VAR['login'])
                 self.preenche_input(VAR['xpath_input_senha'], VAR['senha'])
                 self.clica_botao(VAR['xpath_button_entrar'])
                 logger.log(f"{prefixo} - Login realizado com sucesso")
 
-                # Navegação para a página de pedidos
-                self.navegador.get(VAR['link_pedidos'])
-                logger.log(f"{prefixo} - Navegação para a página de pedidos realizada com sucesso")
-
                 # Coleta de preços FOB
+                sleep(2)
                 vbr_jj.fob_etanol = self.coleta_valor(VAR['xpath_preco_etanol'])
                 vbr_jj.fob_gasolina = self.coleta_valor(VAR['xpath_preco_gasolina'])
                 vbr_jj.fob_s10 = self.coleta_valor(VAR['xpath_preco_s10'])
                 vbr_jj.fob_s500 = self.coleta_valor(VAR['xpath_preco_s500'])
-                logger.log(f"{prefixo} - Coleta de preços FOB realizada com sucesso")
+                logger.log(f"{prefixo} - Coleta de preços FOB realizada")
+                sleep(2)
+                print(vbr_jj.fob_etanol, vbr_jj.fob_gasolina, vbr_jj.fob_s10, vbr_jj.fob_s500)
 
-                # Alteração de modo
-                sleep(5)
-                self.muda_modo(VAR['id_select_modo_etanol'], VAR['modo'], sleep_time=10)
-                self.muda_modo(VAR['id_select_modo_gasolina'], VAR['modo'], sleep_time=10)
-                self.muda_modo(VAR['id_select_modo_s10'], VAR['modo'], sleep_time=10)
-                self.muda_modo(VAR['id_select_modo_s500'], VAR['modo'], sleep_time=10)
-                self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=10)
-                self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=10)
-                logger.log(f"{prefixo} - Alteração de modo realizada com sucesso")
+                # Alteração para modo CIF
+                self.muda_modo(VAR['id_select_modo'], VAR['modo'], sleep_time=15)
+                logger.log(f"{prefixo} - Modo alterado para CIF")
 
                 # Coleta de preços CIF
+                sleep(2)
                 vbr_jj.cif_etanol = self.coleta_valor(VAR['xpath_preco_etanol'])
                 vbr_jj.cif_gasolina = self.coleta_valor(VAR['xpath_preco_gasolina'])
                 vbr_jj.cif_s10 = self.coleta_valor(VAR['xpath_preco_s10'])
                 vbr_jj.cif_s500 = self.coleta_valor(VAR['xpath_preco_s500'])
-                logger.log(f"{prefixo} - Coleta de preços CIF realizada com sucesso")
+                logger.log(f"{prefixo} - Coleta de preços CIF realizada")
+                sleep(2)
+                print(vbr_jj.cif_etanol, vbr_jj.cif_gasolina, vbr_jj.cif_s10, vbr_jj.cif_s500)
 
                 self.fechar_navegador()
                 self.tempo_execucao = round(time() - self.inicio, 2)
-                logger.log(f"{prefixo} - Coleta de preços da {nome_portal} realizada com sucesso")
+                logger.log(f"{prefixo} - Coleta de preços da {nome_portal} finalizada")
                 logger.log(f"{prefixo} - Tempo de execução: {self.tempo_execucao}s")
 
                 if self.esta_com_erro(prefixo): telegram.enviar_mensagem(f"Coleta de preços da {nome_portal} normalizada 😎")

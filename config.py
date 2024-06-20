@@ -106,23 +106,20 @@ VAR_VBR_TRR = {
 }
 
 VAR_VBR_JJ = {
-    'link': os.getenv('LINK_VBR'),
-    'login': os.getenv('LOGIN_VBR_JANJAO'),
-    'senha': os.getenv('SENHA_VBR_JANJAO'),
+    'link_pedidos': os.getenv('LINK_PEDIDOS_VBR'),
     'xpath_input_login': os.getenv('XPATH_INPUT_LOGIN_VBR'),
     'xpath_input_senha': os.getenv('XPATH_INPUT_SENHA_VBR'),
-    'link_pedidos': os.getenv('LINK_PEDIDOS_VBR'),
+    'login': os.getenv('LOGIN_VBR_JANJAO'),
+    'senha': os.getenv('SENHA_VBR_JANJAO'),
     'xpath_button_entrar': os.getenv('XPATH_BUTTON_ENTRAR_VBR'),
-    'xpath_button_atualizar': os.getenv('XPATH_BUTTON_ATUALIZAR_VBR'),
+
     'xpath_preco_etanol': os.getenv('XPATH_PRECO_ETANOL_VBRJJ'),
     'xpath_preco_gasolina': os.getenv('XPATH_PRECO_GASOLINA_VBRJJ'),
     'xpath_preco_s10': os.getenv('XPATH_PRECO_S10_VBRJJ'),
     'xpath_preco_s500': os.getenv('XPATH_PRECO_S500_VBRJJ'),
+
     'modo': os.getenv('MODO_VBR'),
-    'id_select_modo_etanol': os.getenv('ID_SELECT_MODO_ETANOL_VBRJJ'),
-    'id_select_modo_gasolina': os.getenv('ID_SELECT_MODO_GASOLINA_VBRJJ'),
-    'id_select_modo_s10': os.getenv('ID_SELECT_MODO_S10_VBRJJ'),
-    'id_select_modo_s500': os.getenv('ID_SELECT_MODO_S500_VBRJJ')
+    'id_select_modo': os.getenv('ID_SELECT_MODO_VBRJJ'),
 }
 
 VAR_RZN_TRR = {
