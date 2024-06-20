@@ -25,52 +25,50 @@ class ColetorVibraTRR(ColetorDePreco):
         while tentativa <= max_tentativas:
             try:
                 logger.log(f"{prefixo} - Iniciando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
-                self.navegador = self.inicializa_navegador(maximizado, browser='firefox')
+                self.navegador = self.inicializa_navegador(maximizado)
                 self.inicio = time()
 
                 # Login na página principal
-                self.navegador.get(VAR['link'])
+                self.navegador.get(VAR['link_pedidos'])
                 self.preenche_input(VAR['xpath_input_login'], VAR['login'])
                 self.preenche_input(VAR['xpath_input_senha'], VAR['senha'])
                 self.clica_botao(VAR['xpath_button_entrar'])
-                logger.log(f"{prefixo} - Login realizado com sucesso")
+                logger.log(f"{prefixo} - Login realizado")
 
                 # Navegação para a página de pedidos e preenchimento dos campos de quantidade
-                self.navegador.get(VAR['link_pedidos'])
-                self.clica_botao(VAR['xpath_checkbox_revenda'], sleep_time=8)
+                self.clica_botao(VAR['xpath_checkbox_revenda'], sleep_time=5)
                 logger.log(f"{prefixo} - Selecionou 'Revenda'")
-                sleep(5)
+                sleep(10)
+
                 self.preenche_input(VAR['id_input_qtdlitros_s10'], 10000, xpath_ou_id='id')
+                sleep(2)
                 self.preenche_input(VAR['id_input_qtdlitros_s500'], 10000, xpath_ou_id='id')
                 self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
                 self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
-                logger.log(f"{prefixo} - Navegação para a página de pedidos e preenchimento dos campos de quantidade realizados com sucesso")
+                logger.log(f"{prefixo} - Preencheu quantidade de litros")
 
                 # Seleção de prazo
-                sleep(7)
-                self.seleciona_prazo(VAR['id_select_prazo_s10'], VAR['prazo'])
-                sleep(7)
-                self.seleciona_prazo(VAR['id_select_prazos500'], VAR['prazo'])
-                self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=8)
-                logger.log(f"{prefixo} - Seleção de prazo realizada com sucesso")
+                self.__altera_prazo()
+                logger.log(f"{prefixo} - Selecionou prazo para pagamento (FOB)")
 
                 # Coleta de preços FOB
                 vbr_trr.fob_s10 = self.coleta_valor(VAR['xpath_preco_s10'])
                 vbr_trr.fob_s500 = self.coleta_valor(VAR['xpath_preco_s500'])
-                logger.log(f"{prefixo} - Coleta de preços FOB realizada com sucesso")
+                logger.log(f"{prefixo} - Coleta de preços FOB realizada")
 
                 # Alteração de modo
                 sleep(7)
-                self.muda_modo(VAR['id_select_modo_s10'], VAR['modo'], sleep_time=7)
-                self.muda_modo(VAR['id_select_modo_s500'], VAR['modo'], sleep_time=7)
-                self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
-                self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=10)
-                logger.log(f"{prefixo} - Alteração de modo realizada com sucesso")
+                self.muda_modo(VAR['id_select_modo'], VAR['modo'], sleep_time=7)
+                logger.log(f"{prefixo} - Modo alterado para CIF")
+
+                # Seleção de prazo
+                self.__altera_prazo()
+                logger.log(f"{prefixo} - Selecionou prazo para pagamento (CIF)")
 
                 # Coleta de preços CIF
                 vbr_trr.cif_s10 = self.coleta_valor(VAR['xpath_preco_s10'])
                 vbr_trr.cif_s500 = self.coleta_valor(VAR['xpath_preco_s500'])
-                logger.log(f"{prefixo} - Coleta de preços CIF realizada com sucesso")
+                logger.log(f"{prefixo} - Coleta de preços CIF realizada")
 
                 self.fechar_navegador()
                 self.tempo_execucao = round(time() - self.inicio, 2)
@@ -95,3 +93,10 @@ class ColetorVibraTRR(ColetorDePreco):
                     logger.log_error(f"{prefixo} - Coleta de preços da {nome_portal} não realizada!")
                     logger.log_error(f"{prefixo} - Erro: {e}")
                     break
+    
+    def __altera_prazo(self):
+        sleep(5)
+        self.seleciona_prazo(VAR['id_select_prazo_s10'], VAR['prazo'])
+        sleep(3)
+        self.seleciona_prazo(VAR['id_select_prazos500'], VAR['prazo'])
+        self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=8)
