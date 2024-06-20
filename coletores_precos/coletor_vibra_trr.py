@@ -16,7 +16,7 @@ class ColetorVibraTRR(ColetorDePreco):
         Coleta preços de s10 e s500 aditivados do portal da Vibra (TRR).
         """
         tentativa = 1
-        max_tentativas = 3
+        max_tentativas = 1
         nome_portal = "Vibra (TRR)"
         prefixo = "VBRTRR"
         logger = Logger()
@@ -25,7 +25,7 @@ class ColetorVibraTRR(ColetorDePreco):
         while tentativa <= max_tentativas:
             try:
                 logger.log(f"{prefixo} - Iniciando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
-                self.navegador = self.inicializa_navegador(maximizado)
+                self.navegador = self.inicializa_navegador(maximizado, browser='firefox')
                 self.inicio = time()
 
                 # Login na página principal
@@ -48,6 +48,7 @@ class ColetorVibraTRR(ColetorDePreco):
                 logger.log(f"{prefixo} - Preencheu quantidade de litros")
 
                 # Seleção de prazo
+                self.espera_carregamento(VAR['modal_loading'])
                 self.__altera_prazo()
                 logger.log(f"{prefixo} - Selecionou prazo para pagamento (FOB)")
 
@@ -62,6 +63,7 @@ class ColetorVibraTRR(ColetorDePreco):
                 logger.log(f"{prefixo} - Modo alterado para CIF")
 
                 # Seleção de prazo
+                self.espera_carregamento(VAR['modal_loading'])
                 self.__altera_prazo()
                 logger.log(f"{prefixo} - Selecionou prazo para pagamento (CIF)")
 

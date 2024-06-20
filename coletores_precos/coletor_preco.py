@@ -46,6 +46,12 @@ class ColetorDePreco(ABC):
             navegador = webdriver.Firefox(service=svc, options=options)
 
         return navegador
+    
+    def espera_carregamento(self, xpath_modal, tempo_maximo=60):
+        """
+        Espera até que o modal de carregamento desapareça.
+        """
+        WebDriverWait(self.navegador, tempo_maximo).until_not(EC.presence_of_element_located((By.XPATH, xpath_modal)))
 
     def clica_botao(self, xpath, tempo_espera=20, sleep_time=2):
         """

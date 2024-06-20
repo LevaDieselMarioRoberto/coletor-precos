@@ -25,7 +25,7 @@ class ColetorVibraJanjao(ColetorDePreco):
         while tentativa <= max_tentativas:
             try:
                 logger.log(f"{prefixo} - Iniciando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
-                self.navegador = self.inicializa_navegador(maximizado)
+                self.navegador = self.inicializa_navegador(maximizado, browser='firefox')
                 self.inicio = time()
 
                 # Login na página principal
@@ -43,7 +43,6 @@ class ColetorVibraJanjao(ColetorDePreco):
                 vbr_jj.fob_s500 = self.coleta_valor(VAR['xpath_preco_s500'])
                 logger.log(f"{prefixo} - Coleta de preços FOB realizada")
                 sleep(2)
-                print(vbr_jj.fob_etanol, vbr_jj.fob_gasolina, vbr_jj.fob_s10, vbr_jj.fob_s500)
 
                 # Alteração para modo CIF
                 self.muda_modo(VAR['id_select_modo'], VAR['modo'], sleep_time=15)
