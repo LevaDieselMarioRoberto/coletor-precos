@@ -1,5 +1,5 @@
 from telegram import Telegram
-from config import BASE_DIR
+from config.config import BASE_DIR
 import json
 
 class Posto():

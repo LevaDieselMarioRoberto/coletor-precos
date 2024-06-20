@@ -9,7 +9,7 @@ from planilha import Planilha
 from logger import Logger
 from concurrent.futures import ThreadPoolExecutor
 from time import time
-from config import CONTROLS
+from config.config import CONTROLS
 
 
 logger = Logger()

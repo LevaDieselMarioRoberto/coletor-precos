@@ -1,5 +1,5 @@
 import logging
-from config import ARQUIVO_LOG
+from config.config import ARQUIVO_LOG
 
 class Logger:
 

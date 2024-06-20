@@ -4,7 +4,7 @@ from openpyxl.styles import Alignment, Font, PatternFill, Border, Side
 from posto import Posto
 from logger import Logger
 from datetime import datetime
-from config import PLANILHA_DIR
+from config.config import PLANILHA_DIR
 
 
 class Planilha():

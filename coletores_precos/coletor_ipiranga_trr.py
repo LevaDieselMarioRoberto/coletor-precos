@@ -3,7 +3,7 @@ from logger import Logger
 from posto import Posto
 from telegram import Telegram
 from time import time, sleep
-from config import VAR_IPR_TRR as VAR
+from config.config_ipr_trr import VAR
 
 
 class ColetorIpirangaTRR(ColetorDePreco):
@@ -16,7 +16,7 @@ class ColetorIpirangaTRR(ColetorDePreco):
         Coleta preços de s10 e s500 aditivados do portal da Ipiranga (TRR).
         """
         tentativa = 1
-        max_tentativas = 3
+        max_tentativas = VAR['tentativas']
         nome_portal = "Ipiranga (TRR)"
         prefixo = "IPRTRR"
         logger = Logger()
@@ -81,8 +81,8 @@ class ColetorIpirangaTRR(ColetorDePreco):
 
                 if tentativa <= max_tentativas:
                     logger.log_error(f"{prefixo} - Erro na coleta de preços da {nome_portal}")
-                    logger.log_error(f"{prefixo} - Nova tentativa de coleta em 30 segundos...")
-                    sleep(30)
+                    logger.log_error(f"{prefixo} - Nova tentativa de coleta em {VAR['espera_se_erro']} segundos...")
+                    sleep(VAR['espera_se_erro'])
                     continue
                 else:
                     if self.esta_com_erro(prefixo, e): pass

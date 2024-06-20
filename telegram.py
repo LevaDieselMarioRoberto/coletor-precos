@@ -1,5 +1,5 @@
 import requests
-from config import TELEGRAM_CONFIG
+from config.config import TELEGRAM_CONFIG
 from logger import Logger
 
 class Telegram:
