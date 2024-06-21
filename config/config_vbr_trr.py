@@ -1,8 +1,16 @@
 import os
+from getpass import getuser
+from dotenv import load_dotenv
+
+user = getuser()
+BASE_DIR = f"C:/Users/{user}/OneDrive - MARIO ROBERTO TRANSP REVENDEDORA D OLEO DIESEL/Leva Diesel/Informatica/projetos/coletor_precos/"
+ARQUIVO_ENV = f"{BASE_DIR}.env" # Necessário ser explícito para execução de tarefa automática do Windows
+
+load_dotenv(ARQUIVO_ENV)
 
 VAR = {
     'tentativas': os.getenv('TENTATIVAS_VBR'),
-    'espera_se_erro': int(os.getenv('ESPERA_SE_ERRO_VBR')),
+    'espera_se_erro': os.getenv('ESPERA_SE_ERRO_VBR'),
 
     'link_pedidos': os.getenv('LINK_PEDIDOS_VBR'),
     'xpath_input_login': os.getenv('XPATH_INPUT_LOGIN_VBR'),
