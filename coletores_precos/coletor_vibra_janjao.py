@@ -16,7 +16,8 @@ class ColetorVibraJanjao(ColetorDePreco):
         Coleta preços de s10 e s500 aditivados do portal da Vibra (Janjão).
         """
         tentativa = 1
-        max_tentativas = VAR['tentativas']
+        max_tentativas = int(VAR['tentativas'])
+        tempo_espera = int(VAR['espera_se_erro'])
         nome_portal = "Vibra (Janjão)"
         prefixo = "VBRJJ"
         logger = Logger()
@@ -45,7 +46,7 @@ class ColetorVibraJanjao(ColetorDePreco):
                 sleep(2)
 
                 # Alteração para modo CIF
-                self.muda_modo(VAR['id_select_modo'], VAR['modo'], sleep_time=15)
+                self.muda_modo(VAR['id_select_modo'], VAR['modo'], sleep_time=18)
                 logger.log(f"{prefixo} - Modo alterado para CIF")
 
                 # Coleta de preços CIF
@@ -56,14 +57,12 @@ class ColetorVibraJanjao(ColetorDePreco):
                 vbr_jj.cif_s500 = self.coleta_valor(VAR['xpath_preco_s500'])
                 logger.log(f"{prefixo} - Coleta de preços CIF realizada")
                 sleep(2)
-                print(vbr_jj.cif_etanol, vbr_jj.cif_gasolina, vbr_jj.cif_s10, vbr_jj.cif_s500)
 
                 self.fechar_navegador()
                 self.tempo_execucao = round(time() - self.inicio, 2)
-                logger.log(f"{prefixo} - Coleta de preços da {nome_portal} finalizada")
-                logger.log(f"{prefixo} - Tempo de execução: {self.tempo_execucao}s")
+                logger.log(f"{prefixo} - Coleta de preços da finalizada - {nome_portal}. Tempo de execução: {self.tempo_execucao}s")
 
-                if self.esta_com_erro(prefixo): telegram.enviar_mensagem(f"Coleta de preços da {nome_portal} normalizada 😎")
+                if self.estava_com_erro(prefixo): telegram.enviar_mensagem(f"Coleta de preços em {nome_portal} normalizada 😎")
                 break
 
             except Exception as e:
@@ -71,13 +70,12 @@ class ColetorVibraJanjao(ColetorDePreco):
                 self.fechar_navegador()
 
                 if tentativa <= max_tentativas:
-                    logger.log_error(f"{prefixo} - Erro na coleta de preços da {nome_portal}")
-                    logger.log_error(f"{prefixo} - Nova tentativa de coleta em {VAR['espera_se_erro']} segundos...")
-                    sleep(VAR['espera_se_erro'])
+                    logger.log_error(f"{prefixo} - Erro na coleta em {nome_portal}. Nova tentativa em {tempo_espera}s...")
+                    sleep(tempo_espera)
                     continue
                 else:
-                    if self.esta_com_erro(prefixo, e): pass
-                    else: telegram.enviar_mensagem(f"Erro na coleta de preços da {nome_portal} 😕")
-                    logger.log_error(f"{prefixo} - Coleta de preços da {nome_portal} não realizada!")
-                    logger.log_error(f"{prefixo} - Erro: {e}")
+                    if self.eh_terceiro_erro_consecutivo(prefixo, e):
+                        telegram.enviar_mensagem(f"Erro na coleta de preços da {nome_portal} 😕")
+
+                    logger.log_error(f"{prefixo} - Coleta de preços da {nome_portal}. Erro: {e}")
                     break

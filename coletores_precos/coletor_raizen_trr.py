@@ -16,7 +16,7 @@ class ColetorRaizenTRR(ColetorDePreco):
         Coleta preços de s10 e s500 aditivados do portal da Raizen (TRR).
         """
         tentativa = 1
-        max_tentativas = VAR['tentativas']
+        max_tentativas = int(VAR['tentativas'])
         nome_portal = "Raízen (TRR)"
         prefixo = "RZNTRR"
         logger = Logger()
@@ -49,7 +49,7 @@ class ColetorRaizenTRR(ColetorDePreco):
                 logger.log(f"{prefixo} - Coleta de preços da {nome_portal} realizada com sucesso")
                 logger.log(f"{prefixo} - Tempo de execução: {self.tempo_execucao}s")
 
-                if self.esta_com_erro(prefixo): telegram.enviar_mensagem(f"Coleta de preços da {nome_portal} normalizada 😎")
+                if self.verifica_erro(prefixo) > 0: telegram.enviar_mensagem(f"Coleta de preços da {nome_portal} normalizada 😎")
                 break
 
             except Exception as e:
@@ -59,11 +59,15 @@ class ColetorRaizenTRR(ColetorDePreco):
                 if tentativa <= max_tentativas:
                     logger.log_error(f"{prefixo} - Erro na coleta de preços da {nome_portal}")
                     logger.log_error(f"{prefixo} - Nova tentativa de coleta em {VAR['espera_se_erro']} segundos...")
-                    sleep(VAR['espera_se_erro'])
+                    sleep(int(VAR['espera_se_erro']))
                     continue
                 else:
-                    if self.esta_com_erro(prefixo, e): pass
-                    else: telegram.enviar_mensagem(f"Erro na coleta de preços da {nome_portal} 😕")
+                    if self.verifica_erro(prefixo, e) != 3:
+                        pass
+                    else: 
+                        # Envia mensagem quando houverem 3 erros consecutivos
+                        telegram.enviar_mensagem(f"Erro na coleta de preços da {nome_portal} 😕")
+
                     logger.log_error(f"{prefixo} - Coleta de preços da {nome_portal} não realizada!")
                     logger.log_error(f"{prefixo} - Erro: {e}")
                     break

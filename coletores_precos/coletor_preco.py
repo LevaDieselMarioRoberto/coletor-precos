@@ -129,25 +129,51 @@ class ColetorDePreco(ABC):
         """
         self.navegador.quit()
 
-    def esta_com_erro(self, filename, erro=None):
+    def __consulta_json_erro(self, filename):
         """
-        Verifica se a última coleta de preços obteve erro.
+        Consulta o arquivo JSON de erro.
         """
-
         arquivo_json = BASE_DIR + f"dist/{filename}-erro.json"
-
         try:
             with open(arquivo_json, 'r') as f: erro_anterior = json.load(f)
-        except: erro_anterior = {}
+            return erro_anterior
+        except: return {}
+    
+    def __salva_json_erro(self, filename, content):
+        """
+        Salva o conteúdo de um arquivo JSON.
+        """
+        arquivo_json = BASE_DIR + f"dist/{filename}-erro.json"
+        with open(arquivo_json, 'w') as f: json.dump(content, f, indent=2)
 
-        if erro_anterior != {}:
-            if erro == None:
-                with open(arquivo_json, 'w') as f: json.dump({}, f, indent=2)
-            return True
-        else:
-            if erro != None:
-                with open(arquivo_json, 'w') as f: json.dump({"erro": str(erro)}, f, indent=2)
+    def estava_com_erro(self, filename):
+        """
+        Verifica se a última coleta de preços estava com erro.
+        """
+        erro_anterior = self.__consulta_json_erro(filename)
+
+        if erro_anterior == {}: return False
+
+        self.__salva_json_erro(filename, {})
+        contagem_erros = erro_anterior["contagem_erros"]
+        if contagem_erros > 2: return True
+        return False
+
+    def eh_terceiro_erro_consecutivo(self, filename, error):
+        """
+        Verifica se houve terceiro erro consecutivo.
+        """
+        erro_anterior = self.__consulta_json_erro(filename)
+
+        try: contagem_erros = erro_anterior["contagem_erros"]
+        except: contagem_erros = 0
+
+        if contagem_erros != 2:
+            self.__salva_json_erro(filename, {"erro": str(error), "contagem_erros": contagem_erros + 1})
             return False
+        elif contagem_erros == 2:
+            self.__salva_json_erro(filename, {"erro": str(error), "contagem_erros": contagem_erros + 1})
+            return True
 
     @abstractmethod
     def coleta_precos(self, maximizado=False):

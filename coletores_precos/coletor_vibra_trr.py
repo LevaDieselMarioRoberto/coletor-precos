@@ -16,7 +16,8 @@ class ColetorVibraTRR(ColetorDePreco):
         Coleta preços de s10 e s500 aditivados do portal da Vibra (TRR).
         """
         tentativa = 1
-        max_tentativas = VAR['tentativas']
+        max_tentativas = int(VAR['tentativas'])
+        tempo_espera = int(VAR['espera_se_erro'])
         nome_portal = "Vibra (TRR)"
         prefixo = "VBRTRR"
         logger = Logger()
@@ -59,7 +60,7 @@ class ColetorVibraTRR(ColetorDePreco):
 
                 # Alteração de modo
                 sleep(7)
-                self.muda_modo(VAR['id_select_modo'], VAR['modo'], sleep_time=7)
+                self.muda_modo(VAR['id_select_modo'], VAR['modo'], sleep_time=15)
                 logger.log(f"{prefixo} - Modo alterado para CIF")
 
                 # Seleção de prazo
@@ -74,10 +75,9 @@ class ColetorVibraTRR(ColetorDePreco):
 
                 self.fechar_navegador()
                 self.tempo_execucao = round(time() - self.inicio, 2)
-                logger.log(f"{prefixo} - Coleta de preços da {nome_portal} realizada com sucesso")
-                logger.log(f"{prefixo} - Tempo de execução: {self.tempo_execucao}s")
+                logger.log(f"{prefixo} - Coleta de preços da finalizada - {nome_portal}. Tempo de execução: {self.tempo_execucao}s")
 
-                if self.esta_com_erro(prefixo): telegram.enviar_mensagem(f"Coleta de preços da {nome_portal} normalizada 😎")
+                if self.estava_com_erro(prefixo): telegram.enviar_mensagem(f"Coleta de preços em {nome_portal} normalizada 😎")
                 break
 
             except Exception as e:
@@ -85,17 +85,16 @@ class ColetorVibraTRR(ColetorDePreco):
                 self.fechar_navegador()
 
                 if tentativa <= max_tentativas:
-                    logger.log_error(f"{prefixo} - Erro na coleta de preços da {nome_portal}")
-                    logger.log_error(f"{prefixo} - Nova tentativa de coleta em {VAR['espera_se_erro']} segundos...")
-                    sleep(VAR['espera_se_erro'])
+                    logger.log_error(f"{prefixo} - Erro na coleta em {nome_portal}. Nova tentativa em {tempo_espera}s...")
+                    sleep(tempo_espera)
                     continue
                 else:
-                    if self.esta_com_erro(prefixo, e): pass
-                    else: telegram.enviar_mensagem(f"Erro na coleta de preços da {nome_portal} 😕")
-                    logger.log_error(f"{prefixo} - Coleta de preços da {nome_portal} não realizada!")
-                    logger.log_error(f"{prefixo} - Erro: {e}")
+                    if self.eh_terceiro_erro_consecutivo(prefixo, e):
+                        telegram.enviar_mensagem(f"Erro na coleta de preços da {nome_portal} 😕")
+
+                    logger.log_error(f"{prefixo} - Coleta de preços da {nome_portal}. Erro: {e}")
                     break
-    
+
     def __altera_prazo(self):
         sleep(5)
         self.seleciona_prazo(VAR['id_select_prazo_s10'], VAR['prazo'])

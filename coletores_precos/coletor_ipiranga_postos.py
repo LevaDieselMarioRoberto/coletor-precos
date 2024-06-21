@@ -16,7 +16,8 @@ class ColetorIpirangaPostos(ColetorDePreco):
         Coleta preços de s10 e s500 aditivados do portal da Ipiranga (Postos).
         """
         tentativa = 1
-        max_tentativas = VAR['tentativas']
+        max_tentativas = int(VAR['tentativas'])
+        tempo_espera = int(VAR['espera_se_erro'])
         nome_portal = "Ipiranga (Postos)"
         prefixo = "IPRPST"
         logger = Logger()
@@ -34,69 +35,33 @@ class ColetorIpirangaPostos(ColetorDePreco):
                 self.preenche_input(VAR['xpath_input_senha'], VAR['senha'])
                 self.clica_botao(VAR['xpath_button_entrar'])
                 self.clica_botao(VAR['xpath_button_cookies'])
-                logger.log(f"{prefixo} - Login realizado com sucesso")
+                logger.log(f"{prefixo} - Login realizado")
 
-                self.seleciona_filial()                                     # Gás Station
-                ipr_gasstation.cif_etanol = self.coleta_valor( VAR['id_preco_cif_etanol'], xpath_ou_id='id')
-                ipr_gasstation.fob_etanol = self.coleta_valor( VAR['id_preco_fob_etanol'], xpath_ou_id='id')
-                ipr_gasstation.cif_gasolina = self.coleta_valor( VAR['id_preco_cif_gasolina'], xpath_ou_id='id')
-                ipr_gasstation.fob_gasolina = self.coleta_valor( VAR['id_preco_fob_gasolina'], xpath_ou_id='id')
-                ipr_gasstation.cif_gasolina_ad = self.coleta_valor( VAR['id_preco_cif_gasolinaadt'], xpath_ou_id='id')
-                ipr_gasstation.fob_gasolina_ad = self.coleta_valor( VAR['id_preco_fob_gasolinaadt'], xpath_ou_id='id')
-                ipr_gasstation.cif_s10 = self.coleta_valor( VAR['id_preco_cif_s10'], xpath_ou_id='id')
-                ipr_gasstation.fob_s10 = self.coleta_valor( VAR['id_preco_fob_s10'], xpath_ou_id='id')
-                logger.log(f"{prefixo} - Coleta de preços do Gás Station realizada com sucesso")
+                postos = [ipr_gasstation, ipr_distrito, ipr_itirapua, ipr_ppp, ipr_pitstop]
+                nomes = ['Gas Station', 'Distrito', 'Itirapuã', 'PPP', 'Pit Stop']
+                xpaths = ['', VAR['xpath_button_distrito'], VAR['xpath_button_itirapua'], VAR['xpath_button_ppp'], VAR['xpath_button_pitstop']]
 
-                self.seleciona_filial(VAR['xpath_button_distrito'])    # Distrito
-                ipr_distrito.cif_etanol = self.coleta_valor(VAR['id_preco_cif_etanol'], xpath_ou_id='id')
-                ipr_distrito.fob_etanol = self.coleta_valor(VAR['id_preco_fob_etanol'], xpath_ou_id='id')
-                ipr_distrito.cif_gasolina = self.coleta_valor(VAR['id_preco_cif_gasolina'], xpath_ou_id='id')
-                ipr_distrito.fob_gasolina = self.coleta_valor(VAR['id_preco_fob_gasolina'], xpath_ou_id='id')
-                ipr_distrito.cif_s10 = self.coleta_valor(VAR['id_preco_cif_s10'], xpath_ou_id='id')
-                ipr_distrito.fob_s10 = self.coleta_valor(VAR['id_preco_fob_s10'], xpath_ou_id='id')
-                ipr_distrito.cif_s500 = self.coleta_valor(VAR['id_preco_cif_s500'], xpath_ou_id='id')
-                ipr_distrito.fob_s500 = self.coleta_valor(VAR['id_preco_fob_s500'], xpath_ou_id='id')
-                logger.log(f"{prefixo} - Coleta de preços do Distrito realizada com sucesso")
-
-                self.seleciona_filial(VAR['xpath_button_itirapua'])    # Itirapuã
-                ipr_itirapua.cif_etanol = self.coleta_valor(VAR['id_preco_cif_etanol'], xpath_ou_id='id')
-                ipr_itirapua.fob_etanol = self.coleta_valor(VAR['id_preco_fob_etanol'], xpath_ou_id='id')
-                ipr_itirapua.cif_gasolina = self.coleta_valor(VAR['id_preco_cif_gasolina'], xpath_ou_id='id')
-                ipr_itirapua.fob_gasolina = self.coleta_valor(VAR['id_preco_fob_gasolina'], xpath_ou_id='id')
-                ipr_itirapua.cif_s10 = self.coleta_valor(VAR['id_preco_cif_s10'], xpath_ou_id='id')
-                ipr_itirapua.fob_s10 = self.coleta_valor(VAR['id_preco_fob_s10'], xpath_ou_id='id')
-                ipr_itirapua.cif_s500 = self.coleta_valor(VAR['id_preco_cif_s500'], xpath_ou_id='id')
-                ipr_itirapua.fob_s500 = self.coleta_valor(VAR['id_preco_fob_s500'], xpath_ou_id='id')
-                logger.log(f"{prefixo} - Coleta de preços de Itirapuã realizada com sucesso")
-
-                self.seleciona_filial(VAR['xpath_button_ppp'])         # PPP
-                ipr_ppp.cif_etanol = self.coleta_valor(VAR['id_preco_cif_etanol'], xpath_ou_id='id')
-                ipr_ppp.fob_etanol = self.coleta_valor(VAR['id_preco_fob_etanol'], xpath_ou_id='id')
-                ipr_ppp.cif_gasolina = self.coleta_valor(VAR['id_preco_cif_gasolina'], xpath_ou_id='id')
-                ipr_ppp.fob_gasolina = self.coleta_valor(VAR['id_preco_fob_gasolina'], xpath_ou_id='id')
-                ipr_ppp.cif_s10 = self.coleta_valor(VAR['id_preco_cif_s10'], xpath_ou_id='id')
-                ipr_ppp.fob_s10 = self.coleta_valor(VAR['id_preco_fob_s10'], xpath_ou_id='id')
-                logger.log(f"{prefixo} - Coleta de preços do PPP realizada com sucesso")
-
-                self.seleciona_filial(VAR['xpath_button_pitstop'])     # Pit Stop
-                ipr_pitstop.cif_etanol = self.coleta_valor(VAR['id_preco_cif_etanol'], xpath_ou_id='id')
-                ipr_pitstop.fob_etanol = self.coleta_valor(VAR['id_preco_fob_etanol'], xpath_ou_id='id')
-                ipr_pitstop.cif_gasolina = self.coleta_valor(VAR['id_preco_cif_gasolina'], xpath_ou_id='id')
-                ipr_pitstop.fob_gasolina = self.coleta_valor(VAR['id_preco_fob_gasolina'], xpath_ou_id='id')
-                ipr_pitstop.cif_gasolina_ad = self.coleta_valor(VAR['id_preco_cif_gasolinaadt'], xpath_ou_id='id')
-                ipr_pitstop.fob_gasolina_ad = self.coleta_valor(VAR['id_preco_fob_gasolinaadt'], xpath_ou_id='id')
-                ipr_pitstop.cif_s10 = self.coleta_valor(VAR['id_preco_cif_s10'], xpath_ou_id='id')
-                ipr_pitstop.fob_s10 = self.coleta_valor(VAR['id_preco_fob_s10'], xpath_ou_id='id')
-                ipr_pitstop.cif_s500 = self.coleta_valor(VAR['id_preco_cif_s500'], xpath_ou_id='id')
-                ipr_pitstop.fob_s500 = self.coleta_valor(VAR['id_preco_fob_s500'], xpath_ou_id='id')
-                logger.log(f"{prefixo} - Coleta de preços do Pit Stop realizada com sucesso")
+                for posto, nome, xpath in zip(postos, nomes, xpaths):
+                    self.seleciona_filial(xpath)
+                    posto.cif_etanol = self.coleta_valor(VAR['id_preco_cif_etanol'], xpath_ou_id='id')
+                    posto.fob_etanol = self.coleta_valor(VAR['id_preco_fob_etanol'], xpath_ou_id='id')
+                    posto.cif_gasolina = self.coleta_valor(VAR['id_preco_cif_gasolina'], xpath_ou_id='id')
+                    posto.fob_gasolina = self.coleta_valor(VAR['id_preco_fob_gasolina'], xpath_ou_id='id')
+                    if nome == 'Pit Stop' or nome == 'Gas Station':
+                        posto.cif_gasolina_ad = self.coleta_valor(VAR['id_preco_cif_gasolinaadt'], xpath_ou_id='id')
+                        posto.fob_gasolina_ad = self.coleta_valor(VAR['id_preco_fob_gasolinaadt'], xpath_ou_id='id')
+                    posto.cif_s10 = self.coleta_valor(VAR['id_preco_cif_s10'], xpath_ou_id='id')
+                    posto.fob_s10 = self.coleta_valor(VAR['id_preco_fob_s10'], xpath_ou_id='id')
+                    if nome != 'Gas Station' and nome != 'PPP':
+                        posto.cif_s500 = self.coleta_valor(VAR['id_preco_cif_s500'], xpath_ou_id='id')
+                        posto.fob_s500 = self.coleta_valor(VAR['id_preco_fob_s500'], xpath_ou_id='id')
+                    logger.log(f"{prefixo} - Coleta de preços realizada - {nome}")
 
                 self.fechar_navegador()
                 self.tempo_execucao = round(time() - self.inicio, 2)
-                logger.log(f"{prefixo} - Coleta de preços da {nome_portal} realizada com sucesso")
-                logger.log(f"{prefixo} - Tempo de execução: {self.tempo_execucao}s")
+                logger.log(f"{prefixo} - Coleta de preços da finalizada - {nome_portal}. Tempo de execução: {self.tempo_execucao}s")
 
-                if self.esta_com_erro(prefixo): telegram.enviar_mensagem(f"Coleta de preços da {nome_portal} normalizada 😎")
+                if self.estava_com_erro(prefixo): telegram.enviar_mensagem(f"Coleta de preços em {nome_portal} normalizada 😎")
                 break
 
             except Exception as e:
@@ -104,15 +69,14 @@ class ColetorIpirangaPostos(ColetorDePreco):
                 self.fechar_navegador()
 
                 if tentativa <= max_tentativas:
-                    logger.log_error(f"{prefixo} - Erro na coleta de preços da {nome_portal}")
-                    logger.log_error(f"{prefixo} - Nova tentativa de coleta em {VAR['espera_se_erro']} segundos...")
-                    sleep(VAR['espera_se_erro'])
+                    logger.log_error(f"{prefixo} - Erro na coleta em {nome_portal}. Nova tentativa em {tempo_espera}s...")
+                    sleep(tempo_espera)
                     continue
                 else:
-                    if self.esta_com_erro(prefixo, e): pass
-                    else: telegram.enviar_mensagem(f"Erro na coleta de preços da {nome_portal} 😕")
-                    logger.log_error(f"{prefixo} - Coleta de preços da {nome_portal} não realizada!")
-                    logger.log_error(f"{prefixo} - Erro: {e}")
+                    if self.eh_terceiro_erro_consecutivo(prefixo, e):
+                        telegram.enviar_mensagem(f"Erro na coleta de preços da {nome_portal} 😕")
+
+                    logger.log_error(f"{prefixo} - Coleta de preços da {nome_portal}. Erro: {e}")
                     break
 
     def seleciona_filial(self, filial=''):
@@ -125,7 +89,6 @@ class ColetorIpirangaPostos(ColetorDePreco):
         if str(filial) != '':
             self.clica_botao(VAR['xpath_button_razaosocial'])
             self.clica_botao(filial)
-            self.navegador.get(VAR['link_pedidos'])
             sleep(2)
 
         self.troca_iframe(VAR['xpath_iframe'])
