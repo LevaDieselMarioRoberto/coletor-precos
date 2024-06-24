@@ -39,18 +39,32 @@ class ColetorVibraTRR(ColetorDePreco):
                 # Navegação para a página de pedidos e preenchimento dos campos de quantidade
                 self.clica_botao(VAR['xpath_checkbox_revenda'], sleep_time=5)
                 logger.log(f"{prefixo} - Selecionou 'Revenda'")
-                sleep(10)
+                sleep(15)
 
-                self.preenche_input(VAR['id_input_qtdlitros_s10'], 10000, xpath_ou_id='id')
-                sleep(2)
-                self.preenche_input(VAR['id_input_qtdlitros_s500'], 10000, xpath_ou_id='id')
-                self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
-                self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
+                cont = 1
+                while cont <= 3:
+                    try:
+                        logger.log(f'{prefixo} - {cont}ª tentativa de preencher qtd de litros')
+                        self.preenche_input(VAR['id_input_qtdlitros_s10'], 10000, xpath_ou_id='id')
+                        sleep(2)
+                        self.preenche_input(VAR['id_input_qtdlitros_s500'], 10000, xpath_ou_id='id')
+                        self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
+                        self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
+                        break
+                    except:
+                        cont += 1
+                        sleep(5)
                 logger.log(f"{prefixo} - Preencheu quantidade de litros")
 
                 # Seleção de prazo
-                self.espera_carregamento(VAR['modal_loading'])
-                self.__altera_prazo()
+                cont = 1
+                while cont <= 3:
+                    try:
+                        logger.log(f'{prefixo} - {cont}ª tentativa de selecionar prazo (FOB)')
+                        self.__altera_prazo()
+                        break
+                    except:
+                        cont += 1
                 logger.log(f"{prefixo} - Selecionou prazo para pagamento (FOB)")
 
                 # Coleta de preços FOB
@@ -59,13 +73,26 @@ class ColetorVibraTRR(ColetorDePreco):
                 logger.log(f"{prefixo} - Coleta de preços FOB realizada")
 
                 # Alteração de modo
-                sleep(7)
-                self.muda_modo(VAR['id_select_modo'], VAR['modo'], sleep_time=15)
+                cont = 1
+                while cont <= 3:
+                    try:
+                        logger.log(f'{prefixo} - {cont}ª tentativa de alterar modo (CIF)')
+                        sleep(5)
+                        self.muda_modo(VAR['id_select_modo'], VAR['modo'], sleep_time=15)
+                        break
+                    except:
+                        cont += 1
                 logger.log(f"{prefixo} - Modo alterado para CIF")
 
                 # Seleção de prazo
-                self.espera_carregamento(VAR['modal_loading'])
-                self.__altera_prazo()
+                cont = 1
+                while cont <= 3:
+                    try:
+                        logger.log(f'{prefixo} - {cont}ª tentativa de selecionar prazo (CIF)')
+                        self.__altera_prazo()
+                        break
+                    except:
+                        cont += 1
                 logger.log(f"{prefixo} - Selecionou prazo para pagamento (CIF)")
 
                 # Coleta de preços CIF
@@ -96,8 +123,8 @@ class ColetorVibraTRR(ColetorDePreco):
                     break
 
     def __altera_prazo(self):
-        sleep(5)
+        sleep(8)
         self.seleciona_prazo(VAR['id_select_prazo_s10'], VAR['prazo'])
-        sleep(3)
+        sleep(4)
         self.seleciona_prazo(VAR['id_select_prazos500'], VAR['prazo'])
         self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=8)
