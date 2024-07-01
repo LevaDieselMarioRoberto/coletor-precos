@@ -4,6 +4,7 @@ from posto import Posto
 from telegram import Telegram
 from time import time, sleep
 from config.config_rzn_trr import VAR
+import openpyxl
 
 
 class ColetorRaizenTRR(ColetorDePreco):
@@ -13,10 +14,54 @@ class ColetorRaizenTRR(ColetorDePreco):
 
     def coleta_precos(self, raizen_trr:Posto, maximizado=False):
         """
-        Coleta preços de s10 e s500 aditivados do portal da Raizen (TRR).
+        Lê preços de s10 e s500 coletados via Power Automate.
         """
         tentativa = 1
         max_tentativas = int(VAR['tentativas'])
+        tempo_espera = int(VAR['espera_se_erro'])
+        nome_portal = "Raízen (TRR)"
+        prefixo = "RZNTRR"
+        logger = Logger()
+        telegram = Telegram()
+
+        while tentativa <= max_tentativas:
+            try:
+                logger.log(f"{prefixo} - Iniciando leitura de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
+                self.inicio = time()
+
+                arquivo = VAR['precos_power_automate']
+                wb = openpyxl.load_workbook(arquivo)
+                sheet = wb.active
+
+                raizen_trr.cif_s10 = round(float(str(sheet['B2'].value).replace(",", ".")),4)
+                raizen_trr.fob_s10 = round(float(str(sheet['C2'].value).replace(",", ".")),4)
+                raizen_trr.cif_s500 = round(float(str(sheet['B3'].value).replace(",", ".")),4)
+                raizen_trr.fob_s500 = round(float(str(sheet['C3'].value).replace(",", ".")),4)
+                
+                self.tempo_execucao = round(time() - self.inicio, 2)
+                logger.log(f"{prefixo} - Leitura de preços da finalizada - {nome_portal}. Tempo de execução: {self.tempo_execucao}s")
+                break
+            except Exception as e:
+                tentativa += 1
+                if tentativa <= max_tentativas:
+                    logger.log_error(f"{prefixo} - Erro na leitura em {nome_portal}. Nova tentativa em {tempo_espera}s...")
+                    sleep(tempo_espera)
+                    continue
+                else:
+                    logger.log_error(f"{prefixo} - Leitura de preços da {nome_portal} não realizada!")
+                    logger.log_error(f"{prefixo} - Erro: {e}")
+                    break
+
+    def coleta_precos_disabled(self, raizen_trr:Posto, maximizado=False):
+        """
+        Coleta preços de s10 e s500 aditivados do portal da Raizen (TRR).
+
+        Função desativada após solicitação do portal para verificação via e-mail.
+        Coleta passou a ser realizada via Microsoft Power Automate.
+        """
+        tentativa = 1
+        max_tentativas = int(VAR['tentativas'])
+        tempo_espera = int(VAR['espera_se_erro'])
         nome_portal = "Raízen (TRR)"
         prefixo = "RZNTRR"
         logger = Logger()
@@ -46,10 +91,9 @@ class ColetorRaizenTRR(ColetorDePreco):
 
                 self.fechar_navegador()
                 self.tempo_execucao = round(time() - self.inicio, 2)
-                logger.log(f"{prefixo} - Coleta de preços da {nome_portal} realizada com sucesso")
-                logger.log(f"{prefixo} - Tempo de execução: {self.tempo_execucao}s")
+                logger.log(f"{prefixo} - Coleta de preços da finalizada - {nome_portal}. Tempo de execução: {self.tempo_execucao}s")
 
-                if self.verifica_erro(prefixo) > 0: telegram.enviar_mensagem(f"Coleta de preços da {nome_portal} normalizada 😎")
+                if self.estava_com_erro(prefixo): telegram.enviar_mensagem(f"Coleta de preços em {nome_portal} normalizada 😎")
                 break
 
             except Exception as e:
@@ -57,17 +101,12 @@ class ColetorRaizenTRR(ColetorDePreco):
                 self.fechar_navegador()
 
                 if tentativa <= max_tentativas:
-                    logger.log_error(f"{prefixo} - Erro na coleta de preços da {nome_portal}")
-                    logger.log_error(f"{prefixo} - Nova tentativa de coleta em {VAR['espera_se_erro']} segundos...")
-                    sleep(int(VAR['espera_se_erro']))
+                    logger.log_error(f"{prefixo} - Erro na coleta em {nome_portal}. Nova tentativa em {tempo_espera}s...")
+                    sleep(tempo_espera)
                     continue
                 else:
-                    if self.verifica_erro(prefixo, e) != 3:
-                        pass
-                    else: 
-                        # Envia mensagem quando houverem 3 erros consecutivos
+                    if self.eh_terceiro_erro_consecutivo(prefixo, e):
                         telegram.enviar_mensagem(f"Erro na coleta de preços da {nome_portal} 😕")
 
-                    logger.log_error(f"{prefixo} - Coleta de preços da {nome_portal} não realizada!")
-                    logger.log_error(f"{prefixo} - Erro: {e}")
+                    logger.log_error(f"{prefixo} - Coleta de preços da {nome_portal}. Erro: {e}")
                     break
