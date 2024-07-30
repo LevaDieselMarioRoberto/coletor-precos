@@ -44,17 +44,30 @@ class ColetorVibraTRR(ColetorDePreco):
                 cont = 1
                 while cont <= 3:
                     try:
-                        logger.log(f'{prefixo} - {cont}ª tentativa de preencher qtd de litros')
+                        logger.log(f'{prefixo} - {cont}ª tentativa de preencher qtd de litros - s10')
                         self.preenche_input(VAR['id_input_qtdlitros_s10'], 10000, xpath_ou_id='id')
-                        sleep(2)
-                        self.preenche_input(VAR['id_input_qtdlitros_s500'], 10000, xpath_ou_id='id')
-                        self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
-                        self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
+                        sleep(5)
                         break
                     except:
                         cont += 1
                         sleep(5)
-                logger.log(f"{prefixo} - Preencheu quantidade de litros")
+                logger.log(f"{prefixo} - Preencheu quantidade de litros - s10")
+                self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
+                self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
+
+                cont = 1
+                while cont <= 3:
+                    try:
+                        logger.log(f'{prefixo} - {cont}ª tentativa de preencher qtd de litros - s500')
+                        self.preenche_input(VAR['id_input_qtdlitros_s500'], 10000, xpath_ou_id='id')
+                        sleep(5)
+                        break
+                    except:
+                        cont += 1
+                        sleep(5)
+                logger.log(f"{prefixo} - Preencheu quantidade de litros - s500")
+                self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
+                self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
 
                 # Seleção de prazo
                 cont = 1
