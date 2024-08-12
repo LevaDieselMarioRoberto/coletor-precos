@@ -73,8 +73,8 @@ class ColetorIpirangaPostos(ColetorDePreco):
                     sleep(tempo_espera)
                     continue
                 else:
-                    if self.eh_terceiro_erro_consecutivo(prefixo, e):
-                        telegram.enviar_mensagem(f"Erro na coleta de preços da {nome_portal} 😕")
+                    # if self.eh_terceiro_erro_consecutivo(prefixo, e):
+                    telegram.enviar_mensagem(f"Erro na coleta de preços da {nome_portal} 😕")
 
                     logger.log_error(f"{prefixo} - Coleta de preços da {nome_portal}. Erro: {e}")
                     break
