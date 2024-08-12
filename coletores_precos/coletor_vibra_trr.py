@@ -26,7 +26,7 @@ class ColetorVibraTRR(ColetorDePreco):
         while tentativa <= max_tentativas:
             try:
                 logger.log(f"{prefixo} - Iniciando coleta de preços da {nome_portal} (tentativa {tentativa}/{max_tentativas})")
-                self.navegador = self.inicializa_navegador(maximizado, browser='firefox')
+                self.navegador = self.inicializa_navegador(maximizado, browser='edge')
                 self.inicio = time()
 
                 # Login na página principal
@@ -46,7 +46,7 @@ class ColetorVibraTRR(ColetorDePreco):
                     try:
                         logger.log(f'{prefixo} - {cont}ª tentativa de preencher qtd de litros - s10')
                         self.preenche_input(VAR['id_input_qtdlitros_s10'], 10000, xpath_ou_id='id')
-                        sleep(5)
+                        sleep(10)
                         break
                     except:
                         cont += 1
@@ -60,7 +60,7 @@ class ColetorVibraTRR(ColetorDePreco):
                     try:
                         logger.log(f'{prefixo} - {cont}ª tentativa de preencher qtd de litros - s500')
                         self.preenche_input(VAR['id_input_qtdlitros_s500'], 10000, xpath_ou_id='id')
-                        sleep(5)
+                        sleep(10)
                         break
                     except:
                         cont += 1
@@ -129,8 +129,8 @@ class ColetorVibraTRR(ColetorDePreco):
                     sleep(tempo_espera)
                     continue
                 else:
-                    if self.eh_terceiro_erro_consecutivo(prefixo, e):
-                        telegram.enviar_mensagem(f"Erro na coleta de preços da {nome_portal} 😕")
+                    # if self.eh_terceiro_erro_consecutivo(prefixo, e):
+                    telegram.enviar_mensagem(f"Erro na coleta de preços da {nome_portal} 😕")
 
                     logger.log_error(f"{prefixo} - Coleta de preços da {nome_portal}. Erro: {e}")
                     break
