@@ -26,5 +26,5 @@ VAR = {
     'xpath_preco_cif_s10': os.getenv('XPATH_PRECO_CIF_S10_RZN'),
     'xpath_preco_cif_s500': os.getenv('XPATH_PRECO_CIF_S500_RZN'),
 
-    'precos_power_automate': f"{BASE_DIR}precos/Raízen TRR.xlsx",
+    'precos_power_automate': f"{BASE_DIR}precos/Raízen TRR.txt",
 }
