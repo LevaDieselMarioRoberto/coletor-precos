@@ -54,6 +54,7 @@ class ColetorVibraTRR(ColetorDePreco):
                 logger.log(f"{prefixo} - Preencheu quantidade de litros - s10")
                 self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
                 self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=5)
+                sleep(5)
 
                 cont = 1
                 while cont <= 3:
