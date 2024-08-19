@@ -36,6 +36,9 @@ class ColetorVibraJanjao(ColetorDePreco):
                 self.clica_botao(VAR['xpath_button_entrar'])
                 logger.log(f"{prefixo} - Login realizado com sucesso")
 
+                self.__altera_prazo() # Altera prazo para '1 Dia'
+                logger.log(f"{prefixo} - Prazo FOB alterado para {VAR['prazo']}")
+
                 # Coleta de preços FOB
                 sleep(2)
                 vbr_jj.fob_etanol = self.coleta_valor(VAR['xpath_preco_etanol'])
@@ -48,6 +51,9 @@ class ColetorVibraJanjao(ColetorDePreco):
                 # Alteração para modo CIF
                 self.muda_modo(VAR['id_select_modo'], VAR['modo'], sleep_time=18)
                 logger.log(f"{prefixo} - Modo alterado para CIF")
+
+                self.__altera_prazo() # Altera prazo para '1 Dia'
+                logger.log(f"{prefixo} - Prazo CIF alterado para {VAR['prazo']}")
 
                 # Coleta de preços CIF
                 sleep(2)
@@ -79,3 +85,15 @@ class ColetorVibraJanjao(ColetorDePreco):
 
                     logger.log_error(f"{prefixo} - Coleta de preços da {nome_portal}. Erro: {e}")
                     break
+    
+    def __altera_prazo(self):
+        sleep(5)
+        self.seleciona_prazo(VAR['id_select_prazo_etanol'], VAR['prazo'])
+        sleep(5)
+        self.seleciona_prazo(VAR['id_select_prazo_gasolina'], VAR['prazo'])
+        sleep(5)
+        self.seleciona_prazo(VAR['id_select_prazo_s10'], VAR['prazo'])
+        sleep(5)
+        self.seleciona_prazo(VAR['id_select_prazo_s500'], VAR['prazo'])
+        sleep(5)
+        self.clica_botao(VAR['xpath_button_atualizar'], sleep_time=8)
