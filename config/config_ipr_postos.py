@@ -37,6 +37,7 @@ VAR = {
 
     'xpath_button_distrito': os.getenv('XPATH_BUTTON_DISTRITO_IPR'),
     'xpath_button_itirapua': os.getenv('XPATH_BUTTON_ITIRAPUA_IPR'),
+    'xpath_button_acesso': os.getenv('XPATH_BUTTON_ACESSO_IPR'),
     'xpath_button_ppp': os.getenv('XPATH_BUTTON_PPP_IPR'),
     'xpath_button_pitstop': os.getenv('XPATH_BUTTON_PITSTOP_IPR')
 }

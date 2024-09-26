@@ -11,7 +11,7 @@ class ColetorIpirangaPostos(ColetorDePreco):
     def __init__(self):
         super().__init__()
 
-    def coleta_precos(self, ipr_gasstation:Posto, ipr_distrito:Posto, ipr_itirapua:Posto, ipr_ppp:Posto, ipr_pitstop:Posto, maximizado=False):
+    def coleta_precos(self, ipr_gasstation:Posto, ipr_distrito:Posto, ipr_itirapua:Posto, ipr_acesso:Posto, ipr_ppp:Posto, ipr_pitstop:Posto, maximizado=False):
         """
         Coleta preços de s10 e s500 aditivados do portal da Ipiranga (Postos).
         """
@@ -37,9 +37,9 @@ class ColetorIpirangaPostos(ColetorDePreco):
                 self.clica_botao(VAR['xpath_button_cookies'])
                 logger.log(f"{prefixo} - Login realizado")
 
-                postos = [ipr_gasstation, ipr_distrito, ipr_itirapua, ipr_ppp, ipr_pitstop]
-                nomes = ['Gas Station', 'Distrito', 'Itirapuã', 'PPP', 'Pit Stop']
-                xpaths = ['', VAR['xpath_button_distrito'], VAR['xpath_button_itirapua'], VAR['xpath_button_ppp'], VAR['xpath_button_pitstop']]
+                postos = [ipr_gasstation, ipr_distrito, ipr_itirapua, ipr_acesso, ipr_ppp, ipr_pitstop]
+                nomes = ['Gas Station', 'Distrito', 'Itirapuã', 'Acesso', 'PPP', 'Pit Stop']
+                xpaths = ['', VAR['xpath_button_distrito'], VAR['xpath_button_itirapua'], VAR['xpath_button_acesso'], VAR['xpath_button_ppp'], VAR['xpath_button_pitstop']]
 
                 for posto, nome, xpath in zip(postos, nomes, xpaths):
                     self.seleciona_filial(xpath)

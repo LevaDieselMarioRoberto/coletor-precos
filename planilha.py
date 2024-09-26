@@ -8,7 +8,6 @@ from config.config import PLANILHA_DIR
 class Planilha():
 
     def __init__(self):
-        # self.df = pd.DataFrame()
         self.arquivo = PLANILHA_DIR
         self.logger = Logger()
 
@@ -31,18 +30,20 @@ class Planilha():
                 columns = [6, 7]
             elif posto.nome == "Ipiranga Itirapuã":
                 columns = [8, 9]
-            elif posto.nome == "Ipiranga PPP":
+            elif posto.nome == "Ipiranga Acesso":
                 columns = [10, 11]
-            elif posto.nome == "Vibra Janjão":
+            elif posto.nome == "Ipiranga PPP":
                 columns = [12, 13]
-            elif posto.nome == "Ipiranga TRR 1":
+            elif posto.nome == "Vibra Janjão":
                 columns = [14, 15]
-            elif posto.nome == "Ipiranga TRR 2":
+            elif posto.nome == "Ipiranga TRR 1":
                 columns = [16, 17]
-            elif posto.nome == "Vibra TRR":
+            elif posto.nome == "Ipiranga TRR 2":
                 columns = [18, 19]
-            elif posto.nome == "Raízen TRR":
+            elif posto.nome == "Vibra TRR":
                 columns = [20, 21]
+            elif posto.nome == "Raízen TRR":
+                columns = [22, 23]
 
             row = 3
             for cif, fob in zip(cif_values, fob_values):

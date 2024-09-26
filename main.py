@@ -47,12 +47,13 @@ if CONTROLS['COLETA_HABILITADA'] and datetime.now().hour < 20:
         ipr_gasstation = Posto("Ipiranga Gas Station")
         ipr_distrito = Posto("Ipiranga Distrito")
         ipr_itirapua = Posto("Ipiranga Itirapuã")
+        ipr_acesso = Posto("Ipiranga Acesso")
         ipr_ppp = Posto("Ipiranga PPP")
         ipr_pitstop = Posto("Ipiranga Pit Stop")
         coletor_ipr_postos = ColetorIpirangaPostos()
         funcoes_e_argumentos.append((
             coletor_ipr_postos.coleta_precos,
-            [ipr_gasstation, ipr_distrito, ipr_itirapua, ipr_ppp, ipr_pitstop, CONTROLS['MAXIMIZADO_IPR_POSTOS']]
+            [ipr_gasstation, ipr_distrito, ipr_itirapua, ipr_acesso, ipr_ppp, ipr_pitstop, CONTROLS['MAXIMIZADO_IPR_POSTOS']]
         ))
     
     if CONTROLS['COLETAR_VBR_JJ']:
@@ -74,7 +75,7 @@ if CONTROLS['COLETA_HABILITADA'] and datetime.now().hour < 20:
 
     postos = []
 
-    if CONTROLS['COLETAR_IPR_POSTOS']: postos.extend([ipr_pitstop, ipr_distrito, ipr_gasstation, ipr_itirapua, ipr_ppp])
+    if CONTROLS['COLETAR_IPR_POSTOS']: postos.extend([ipr_pitstop, ipr_distrito, ipr_gasstation, ipr_itirapua, ipr_acesso, ipr_ppp])
     if CONTROLS['COLETAR_VBR_JJ']: postos.append(vbr_jj)
     if CONTROLS['COLETAR_IPR_TRR']: postos.extend([ipr_trr1, ipr_trr2])
     if CONTROLS['COLETAR_VBR_TRR']: postos.append(vbr_trr)
