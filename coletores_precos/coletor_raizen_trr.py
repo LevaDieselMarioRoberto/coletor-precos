@@ -12,7 +12,7 @@ class ColetorRaizenTRR(ColetorDePreco):
     def __init__(self):
         super().__init__()
 
-    def coleta_precos(self, raizen_trr:Posto, maximizado=False):
+    def coleta_precos(self, raizen_trr:Posto):
         """
         Lê preços de s10 e s500 coletados via Power Automate.
         """

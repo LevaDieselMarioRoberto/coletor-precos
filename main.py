@@ -35,14 +35,6 @@ if CONTROLS['COLETA_HABILITADA'] and datetime.now().hour < 20:
             [vbr_trr, CONTROLS['MAXIMIZADO_VBR_TRR']]
         ))
 
-    if CONTROLS['COLETAR_RZN_TRR']:
-        rzn_trr = Posto("Raízen TRR")
-        coletor_rzn_trr = ColetorRaizenTRR()
-        funcoes_e_argumentos.append((
-            coletor_rzn_trr.coleta_precos,
-            [rzn_trr, CONTROLS['MAXIMIZADO_RZN_TRR']]
-        ))
-
     if CONTROLS['COLETAR_IPR_POSTOS']:
         ipr_gasstation = Posto("Ipiranga Gas Station")
         ipr_distrito = Posto("Ipiranga Distrito")
@@ -69,6 +61,12 @@ if CONTROLS['COLETA_HABILITADA'] and datetime.now().hour < 20:
 
     with ThreadPoolExecutor() as executor:  # Executa as funções simultaneamente
         executor.map(lambda x: x[0](*x[1]), funcoes_e_argumentos)
+
+    # Coleta da Raízen é realizada com o MS Power Automate devido a necessidade de código de verificação via e-mail
+    if CONTROLS['COLETAR_RZN_TRR']:
+        rzn_trr = Posto("Raízen TRR")
+        coletor_rzn_trr = ColetorRaizenTRR()
+        coletor_rzn_trr.coleta_precos(rzn_trr)
 
     tempo_total = round(time() - inicio, 2)
     logger.log(f"Tempo de execução: {tempo_total} segundos")

@@ -3,7 +3,7 @@ from getpass import getuser
 from dotenv import load_dotenv
 
 user = getuser()
-BASE_DIR = f"C:/Users/{user}/OneDrive - MARIO ROBERTO TRANSP REVENDEDORA D OLEO DIESEL/Leva Diesel/Informatica/projetos/coletor_precos/"
+BASE_DIR = f"C:/Users/{user}/Documents/Projetos/coletor_precos/"
 ARQUIVO_ENV = f"{BASE_DIR}.env" # Necessário ser explícito para execução de tarefa automática do Windows
 
 load_dotenv(ARQUIVO_ENV)
